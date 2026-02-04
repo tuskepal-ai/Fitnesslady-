@@ -3,324 +3,485 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Fitness Lady | Női edzésprogramok</title>
-  <meta name="description" content="Fitness Lady – személyi edzés, online coaching, edzéstervek és táplálkozási iránymutatás nőknek." />
+
+  <title>Fitness Lady – Női edzésprogramok, online coaching</title>
+  <meta name="description" content="Női edzésprogramok, online coaching és személyi edzés. Formálódás, erő, jobb közérzet – személyre szabott edzéssel és egyszerű táplálkozási rendszerrel. Ingyenes konzultáció." />
+  <link rel="canonical" href="https://fitnesslady.ch/" />
+  <meta name="robots" content="index,follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Fitness Lady – Női edzésprogramok" />
+  <meta property="og:description" content="Személyre szabott edzés + egyszerű táplálkozási rendszer. Ingyenes konzultáció." />
+  <meta property="og:url" content="https://fitnesslady.ch/" />
+  <meta property="og:image" content="https://fitnesslady.ch/og.jpg" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Fitness Lady – Női edzésprogramok" />
+  <meta name="twitter:description" content="Személyre szabott edzés + egyszerű táplálkozási rendszer. Ingyenes konzultáció." />
 
   <style>
     :root{
-      --bg:#0b0b10;
-      --card:#121220;
-      --text:#f5f5f7;
-      --muted:#b7b7c3;
-      --accent:#ff4fd8;
-      --accent2:#7c4dff;
-      --line:rgba(255,255,255,.10);
+      --bg0:#0b0611;
+      --bg1:#140a22;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.08);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --muted2: rgba(255,255,255,.58);
+      --line: rgba(255,255,255,.10);
+      --accent1:#ff4fd8;
+      --accent2:#8a5bff;
+      --ok: rgba(72, 255, 186, .18);
+      --shadow: 0 16px 60px rgba(0,0,0,.55);
+      --r: 18px;
     }
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background: radial-gradient(1200px 700px at 15% 5%, rgba(255,79,216,.25), transparent 55%),
-                  radial-gradient(900px 600px at 85% 25%, rgba(124,77,255,.18), transparent 55%),
-                  var(--bg);
       color:var(--text);
-      line-height:1.5;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(900px 500px at 18% 20%, rgba(255,79,216,.22), transparent 55%),
+        radial-gradient(820px 520px at 78% 18%, rgba(138,91,255,.20), transparent 55%),
+        radial-gradient(900px 700px at 55% 70%, rgba(255,79,216,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
     }
-    a{color:inherit; text-decoration:none}
-    .wrap{max-width:1100px; margin:0 auto; padding:24px}
-    .nav{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:16px 0; border-bottom:1px solid var(--line);
-      position:sticky; top:0; backdrop-filter: blur(10px);
-      background: rgba(11,11,16,.55);
-      z-index:10;
+    a{color:inherit}
+    .wrap{max-width:1060px;margin:0 auto;padding:0 16px}
+    .glass{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius: calc(var(--r) + 6px);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
     }
-    .brand{display:flex; gap:10px; align-items:center; font-weight:800; letter-spacing:.2px}
-    .dot{width:12px; height:12px; border-radius:50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      box-shadow: 0 0 22px rgba(255,79,216,.35);
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      padding:12px 0;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(10,6,18,.68), rgba(10,6,18,.18));
+      border-bottom:1px solid rgba(255,255,255,.06);
     }
-    .navlinks{display:flex; gap:18px; color:var(--muted); font-weight:600}
+    .topbar .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{
+      display:flex;align-items:center;gap:10px;text-decoration:none;
+      padding:10px 12px;border-radius:999px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .brand-logo{
+      width:28px;height:28px;display:block;
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,.45));
+    }
+    .brand-dot{
+      width:12px;height:12px;border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, var(--accent1), var(--accent2));
+      box-shadow: 0 10px 30px rgba(255,79,216,.25);
+    }
+    .brand-text{font-weight:800;letter-spacing:.2px}
+    .nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .nav a{
+      text-decoration:none;
+      padding:10px 12px;border-radius:999px;
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      font-size:14px;
+      color: var(--muted);
+    }
+    .nav a:hover{background: rgba(255,255,255,.06); color: var(--text)}
     .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      gap:10px; padding:12px 16px; border-radius:14px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      font-weight:800;
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      padding:14px 18px;border-radius:999px;
+      text-decoration:none;font-weight:800;
+      border:1px solid rgba(255,255,255,.10);
+      cursor:pointer;
+      user-select:none;
+      line-height:1;
     }
-    .btn.primary{
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
+    .btn-primary{
+      color:#0b0611;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
       border:none;
-      box-shadow: 0 16px 40px rgba(255,79,216,.22);
+      box-shadow: 0 18px 55px rgba(138,91,255,.22);
     }
+    .btn-ghost{
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+    }
+    .btn-small{padding:10px 12px;font-size:14px}
     .hero{
-      display:grid; grid-template-columns: 1.1fr .9fr;
-      gap:26px; padding:38px 0 10px;
+      padding:22px 0 6px;
     }
-    .h1{
-      font-size: clamp(34px, 5vw, 56px);
+    .hero-card{padding:18px}
+    .hero-top{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .pill{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:10px 12px;border-radius:999px;
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      color: var(--muted);
+      font-size:14px;
+    }
+    .hero h1{
+      font-size: clamp(36px, 6vw, 60px);
       line-height:1.05;
-      margin:0 0 14px;
+      margin:14px 0 12px;
       letter-spacing:-.8px;
     }
-    .sub{color:var(--muted); font-size:18px; margin:0 0 22px; max-width:56ch}
-    .pillrow{display:flex; gap:10px; flex-wrap:wrap; margin:18px 0 22px}
-    .pill{
-      padding:8px 12px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.05);
-      color:var(--muted); font-weight:700; font-size:13px;
+    .hero p{
+      margin:0 0 18px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height:1.55;
+      max-width: 62ch;
     }
+    .chips{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 18px}
+    .chip{
+      padding:12px 14px;border-radius:999px;
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color: var(--muted);
+      font-weight:700;
+      font-size:14px;
+    }
+    .cta-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .meta-line{
+      margin-top:12px;color: var(--muted2);font-size:14px;
+      display:flex;gap:12px;flex-wrap:wrap;align-items:center
+    }
+
+    .section{padding:28px 0}
+    .section-head{margin-bottom:14px}
+    .section-head h2{margin:0 0 6px;font-size:26px}
+    .section-head p{margin:0;color:var(--muted);line-height:1.55}
+
+    .grid-3{display:grid;grid-template-columns:1fr;gap:14px}
+    .grid-2{display:grid;grid-template-columns:1fr;gap:14px}
+    @media(min-width:840px){
+      .grid-3{grid-template-columns:repeat(3,1fr)}
+      .grid-2{grid-template-columns:repeat(2,1fr)}
+    }
+
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:18px;
-      padding:18px;
+      padding:16px;
+      border-radius: var(--r);
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(10px);
     }
-    .heroCard{
-      display:flex; flex-direction:column; gap:14px;
-      padding:18px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(600px 300px at 30% 0%, rgba(255,79,216,.18), transparent 60%),
-        radial-gradient(600px 300px at 80% 20%, rgba(124,77,255,.16), transparent 60%),
-        rgba(255,255,255,.04);
-      min-height: 320px;
-    }
-    .kpiRow{display:grid; grid-template-columns: repeat(3, 1fr); gap:12px}
-    .kpi{padding:12px; border-radius:16px; border:1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.22)}
-    .kpi b{display:block; font-size:20px}
-    .kpi span{color:var(--muted); font-weight:700; font-size:13px}
-    .grid3{display:grid; grid-template-columns: repeat(3, 1fr); gap:14px}
-    .section{padding:26px 0}
-    .h2{font-size:28px; margin:0 0 10px; letter-spacing:-.4px}
+    .card h3{margin:0 0 8px}
     .muted{color:var(--muted)}
-    .list{margin:10px 0 0; padding:0 0 0 18px; color:var(--muted)}
-    .price{
-      display:flex; flex-direction:column; gap:10px;
-      min-height: 240px;
+    .small{font-size:13px;color:var(--muted2)}
+    .list{margin:12px 0 0;padding-left:18px;color: var(--muted)}
+    .list li{margin:7px 0}
+    .featured{
+      outline:2px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
+      position:relative;
     }
-    .price .tag{color:var(--muted); font-weight:800; font-size:13px}
-    .price .val{font-size:36px; font-weight:900; letter-spacing:-.6px}
-    .price .val small{font-size:14px; color:var(--muted); font-weight:800}
-    .footer{
-      border-top:1px solid var(--line);
-      padding:18px 0 30px; color:var(--muted);
-      display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    .badge{
+      position:absolute; top:12px; right:12px;
+      font-size:12px; font-weight:800;
+      padding:6px 10px; border-radius:999px;
+      background: rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.10);
     }
-    .two{display:grid; grid-template-columns: 1fr 1fr; gap:14px}
-    input, textarea{
-      width:100%; padding:12px 14px; border-radius:14px;
-      border:1px solid rgba(255,255,255,.14);
+    .note{
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius: 14px;
       background: rgba(255,255,255,.05);
-      color:var(--text);
-      outline:none;
+      border:1px solid rgba(255,255,255,.08);
+      color: var(--muted);
     }
-    textarea{min-height:110px; resize:vertical}
-    .small{font-size:13px}
-    @media (max-width: 920px){
-      .hero{grid-template-columns: 1fr; padding-top:22px}
-      .grid3{grid-template-columns:1fr}
-      .two{grid-template-columns:1fr}
-      .navlinks{display:none}
+    .divider{height:1px;background:rgba(255,255,255,.08);margin:6px 0 0}
+    .footer{padding:22px 0 40px;color:var(--muted2);font-size:13px}
+    .kbd{
+      display:inline-block;
+      padding:2px 8px;border-radius:8px;
+      background: rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.08);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size:12px;color: var(--muted);
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="nav">
-      <div class="brand"><span class="dot"></span> Fitness Lady</div>
-      <div class="navlinks">
-        <a href="#szolgaltatas">Szolgáltatások</a>
-        <a href="#csomagok">Csomagok</a>
-        <a href="#velemenyek">Vélemények</a>
-        <a href="#kapcsolat">Kapcsolat</a>
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="wrap">
+      <div class="row">
+        <a class="brand" href="#top" aria-label="Fitness Lady főoldal">
+          <!-- Ha van logód, tedd a repo gyökerébe: logo.svg vagy logo.png -->
+          <!-- Ha nincs logó, a dot így is megjelenik -->
+          <span class="brand-dot" aria-hidden="true"></span>
+          <img class="brand-logo" src="logo.svg" alt="Fitness Lady logo" onerror="this.style.display='none'">
+          <span class="brand-text">Fitness Lady</span>
+        </a>
+
+        <nav class="nav" aria-label="Fő navigáció">
+          <a href="#csomagok">Csomagok</a>
+          <a href="#mit-kapsz">Mit kapsz?</a>
+          <a href="#velemenyek">Vélemények</a>
+          <a class="btn btn-primary btn-small" href="#kapcsolat">Ingyenes konzultáció</a>
+        </nav>
       </div>
-      <a class="btn primary" href="#kapcsolat">Ingyenes konzultáció</a>
     </div>
+  </div>
 
-    <section class="hero">
-      <div>
-        <h1 class="h1">Női edzésprogramok, amiket tényleg lehet tartani.</h1>
-        <p class="sub">Formásodás, erő, jobb közérzet – személyre szabott edzéssel és egyszerű táplálkozási rendszerrel. Otthon vagy teremben, a te életedhez igazítva.</p>
-
-        <div class="pillrow">
-          <div class="pill">Személyi edzés</div>
-          <div class="pill">Online coaching</div>
-          <div class="pill">Táplálkozás</div>
-          <div class="pill">4–8 hetes kihívások</div>
+  <!-- Hero -->
+  <main id="top" class="hero">
+    <div class="wrap">
+      <div class="hero-card glass">
+        <div class="hero-top">
+          <span class="pill">● Fitness Lady</span>
+          <a class="btn btn-primary btn-small" href="#kapcsolat">Ingyenes konzultáció</a>
         </div>
 
-        <div style="display:flex; gap:12px; flex-wrap:wrap">
-          <a class="btn primary" href="#csomagok">Csomagok megnézése</a>
-          <a class="btn" href="#szolgaltatas">Mit kapsz pontosan?</a>
-        </div>
+        <h1>Női edzésprogramok,<br>amiket tényleg lehet tartani.</h1>
 
-        <p class="muted small" style="margin-top:14px">
-          📍 [Város / Terem neve] • ⏱️ [Időtartamok] • 💬 WhatsApp/Instagram: [@fitnesslady]
+        <p>
+          Formásodás, erő, jobb közérzet – személyre szabott edzéssel és egyszerű
+          táplálkozási rendszerrel. Otthon vagy teremben, a te életedhez igazítva.
         </p>
-      </div>
 
-      <div class="heroCard">
-        <div class="card">
-          <b>Rólam (röviden)</b>
-          <div class="muted">[2–3 mondat: ki vagy, kinek segítesz, mi a módszered.]</div>
+        <div class="chips" aria-label="Fő szolgáltatások">
+          <span class="chip">Személyi edzés</span>
+          <span class="chip">Online coaching</span>
+          <span class="chip">Táplálkozás</span>
+          <span class="chip">4–8 hetes kihívások</span>
         </div>
 
-        <div class="kpiRow">
-          <div class="kpi"><b>+X</b><span>vendég / ügyfél</span></div>
-          <div class="kpi"><b>Y év</b><span>tapasztalat</span></div>
-          <div class="kpi"><b>100%</b><span>személyre szabás</span></div>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#csomagok">Csomagok megnézése</a>
+          <a class="btn btn-ghost" href="#mit-kapsz">Mit kapsz pontosan?</a>
         </div>
 
-        <div class="card">
-          <b>Gyors indulás</b>
-          <div class="muted">Írj egy célt (pl. “-5 kg”, “kerekebb forma”, “has/comb”), és adok egy irányt + tervet.</div>
-        </div>
-      </div>
-    </section>
-
-    <section id="szolgaltatas" class="section">
-      <h2 class="h2">Szolgáltatások</h2>
-      <p class="muted">Válassz a célodhoz és idődhöz illő megoldást.</p>
-
-      <div class="grid3">
-        <div class="card">
-          <b>Személyi edzés</b>
-          <p class="muted">Technika, motiváció, progresszió – biztonságosan és hatékonyan.</p>
-          <ul class="list">
-            <li>Edzés a te szintedre</li>
-            <li>Fókusz: forma + erő + állóképesség</li>
-            <li>Rendszeres mérés / fejlődéskövetés</li>
-          </ul>
-        </div>
-
-        <div class="card">
-          <b>Online coaching</b>
-          <p class="muted">Edzésterv + heti check-in, ha rugalmasan edzenél.</p>
-          <ul class="list">
-            <li>Heti vagy kétheti frissítés</li>
-            <li>Videós gyakorlat magyarázatok</li>
-            <li>Chat támogatás</li>
-          </ul>
-        </div>
-
-        <div class="card">
-          <b>Táplálkozási iránymutatás</b>
-          <p class="muted">Nem diéta, hanem tartható rendszer – a mindennapokra.</p>
-          <ul class="list">
-            <li>Egyszerű bevásárlós lista</li>
-            <li>Makró / adagolási keret</li>
-            <li>“Mit egyél, ha nincs időd?” megoldások</li>
-          </ul>
+        <div class="meta-line">
+          <span>📍 [Város / Terem neve]</span>
+          <span>⏱️ [Időtartamok]</span>
+          <span>💬 WhatsApp/Instagram: <strong>@fitnesslady</strong></span>
         </div>
       </div>
-    </section>
+    </div>
+  </main>
 
-    <section id="csomagok" class="section">
-      <h2 class="h2">Csomagok</h2>
-      <p class="muted">Kezdésnek 3 tiszta opció. Az árakat átírom, amint megadod.</p>
-
-      <div class="grid3">
-        <div class="card price">
-          <div class="tag">START</div>
-          <div class="val">CHF [..] <small>/ hó</small></div>
-          <div class="muted">Alap online edzésterv + havi 1 konzultáció.</div>
-          <ul class="list">
-            <li>Edzésterv</li>
-            <li>1x check-in / hó</li>
-            <li>Alap táplálkozási keret</li>
-          </ul>
-          <a class="btn primary" href="#kapcsolat">Ezt kérem</a>
-        </div>
-
-        <div class="card price" style="border:1px solid rgba(255,79,216,.35)">
-          <div class="tag">PRO (legnépszerűbb)</div>
-          <div class="val">CHF [..] <small>/ hó</small></div>
-          <div class="muted">Heti check-in + rugalmas frissítés, gyorsabb fejlődés.</div>
-          <ul class="list">
-            <li>Edzésterv + frissítés</li>
-            <li>Heti check-in</li>
-            <li>Chat támogatás</li>
-          </ul>
-          <a class="btn primary" href="#kapcsolat">Ezt kérem</a>
-        </div>
-
-        <div class="card price">
-          <div class="tag">VIP</div>
-          <div class="val">CHF [..] <small>/ hó</small></div>
-          <div class="muted">Személyi edzés + teljes coaching csomag.</div>
-          <ul class="list">
-            <li>Személyi edzések / hónap</li>
-            <li>Teljes táplálkozási rendszer</li>
-            <li>Prioritás támogatás</li>
-          </ul>
-          <a class="btn primary" href="#kapcsolat">Ezt kérem</a>
-        </div>
+  <!-- Üzleti rész / Csomagok -->
+  <section id="csomagok" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Csomagok</h2>
+        <p>Próba verzió – struktúra profi landing logikával. Az árakat/paramétereket később pontosítjuk.</p>
       </div>
-    </section>
 
-    <section id="velemenyek" class="section">
-      <h2 class="h2">Vélemények</h2>
-      <p class="muted">Ide jön 3–6 valódi visszajelzés (név / keresztnév, cél, eredmény).</p>
-
-      <div class="grid3">
+      <div class="grid-3">
         <div class="card">
-          <b>“[1–2 mondatos vélemény]”</b>
-          <p class="muted small">— [Név], [cél/eredmény]</p>
+          <h3>Start</h3>
+          <p class="muted">Ha kell egy tiszta terv és lendület.</p>
+          <ul class="list">
+            <li>Személyre szabott edzésterv</li>
+            <li>Alap táplálkozási keretrendszer</li>
+            <li>1× kontroll / módosítás</li>
+            <li>Ajánlott: 4 hét</li>
+          </ul>
+          <div class="cta-row" style="margin-top:12px">
+            <a class="btn btn-primary btn-small" href="#kapcsolat">Érdekel</a>
+            <a class="btn btn-ghost btn-small" href="#mit-kapsz">Részletek</a>
+          </div>
         </div>
-        <div class="card">
-          <b>“[1–2 mondatos vélemény]”</b>
-          <p class="muted small">— [Név], [cél/eredmény]</p>
-        </div>
-        <div class="card">
-          <b>“[1–2 mondatos vélemény]”</b>
-          <p class="muted small">— [Név], [cél/eredmény]</p>
-        </div>
-      </div>
-    </section>
 
-    <section id="kapcsolat" class="section">
-      <h2 class="h2">Kapcsolat / Jelentkezés</h2>
-      <p class="muted">Írj pár sort a célodról, és visszajelzek a legjobb csomaggal + következő lépéssel.</p>
-
-      <div class="two">
-        <div class="card">
-          <form onsubmit="event.preventDefault(); alert('Köszi! Írj a WhatsAppon/Emailen is, hogy biztos megkapjam.');">
-            <div style="display:grid; gap:10px">
-              <input placeholder="Neved" required />
-              <input placeholder="Email vagy telefonszám" required />
-              <textarea placeholder="Célod (pl. -5 kg / has-comb / erősödés / otthoni edzés)"></textarea>
-              <button class="btn primary" type="submit">Üzenet küldése</button>
-              <div class="muted small">Vagy: WhatsApp: [szám] • Instagram: [@fitnesslady]</div>
-            </div>
-          </form>
+        <div class="card featured">
+          <div class="badge">Legnépszerűbb</div>
+          <h3>Balance</h3>
+          <p class="muted">Formálódás + erő, folyamatos visszajelzéssel.</p>
+          <ul class="list">
+            <li>Edzés + táplálkozás személyre szabva</li>
+            <li>Heti követés / finomhangolás</li>
+            <li>Szokásépítés (napirendhez igazítva)</li>
+            <li>Ajánlott: 6–8 hét</li>
+          </ul>
+          <div class="cta-row" style="margin-top:12px">
+            <a class="btn btn-primary btn-small" href="#kapcsolat">Érdekel</a>
+            <a class="btn btn-ghost btn-small" href="#velemenyek">Vélemények</a>
+          </div>
         </div>
 
         <div class="card">
-          <b>Elérhetőség</b>
-          <p class="muted" style="margin-top:8px">
-            📍 [Város / Cím]<br/>
-            🕒 [Nyitvatartás / elérhetőség]<br/>
-            📩 [Email]<br/>
-            💬 WhatsApp: [szám]<br/>
-            📸 Instagram: [@fitnesslady]
-          </p>
-          <div class="card" style="margin-top:12px">
-            <b>Ingyenes konzultáció (15 perc)</b>
-            <p class="muted">Küldd el a célod + heti edzésidőd, és adok egy konkrét tervet.</p>
+          <h3>Pro</h3>
+          <p class="muted">Maximális támogatás, ha komoly célt lősz be.</p>
+          <ul class="list">
+            <li>Teljesen személyre szabott program</li>
+            <li>Gyakori kontroll + gyors módosítás</li>
+            <li>Otthoni vagy terem verzió</li>
+            <li>Ajánlott: 8+ hét</li>
+          </ul>
+          <div class="cta-row" style="margin-top:12px">
+            <a class="btn btn-primary btn-small" href="#kapcsolat">Érdekel</a>
+            <a class="btn btn-ghost btn-small" href="#mit-kapsz">Részletek</a>
           </div>
         </div>
       </div>
-    </section>
 
-    <div class="footer">
-      <div>© <span id="y"></span> Fitness Lady • Minden jog fenntartva</div>
-      <div class="small">Adatkezelés • ÁSZF (később hozzáadjuk)</div>
+      <div class="note">
+        <strong>Megjegyzés:</strong> itt később jöhetnek konkrét árak, időpontfoglalás, fizetés, stb.
+      </div>
     </div>
-  </div>
+  </section>
+
+  <!-- Hogyan működik -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Hogyan működik?</h2>
+        <p>Egyszerű, követhető rendszer – a való élethez igazítva.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>1) Ingyenes konzultáció</h3>
+          <p class="muted">Célok, előzmények, időbeosztás, otthon/terem. Rövid, lényegre törő.</p>
+        </div>
+        <div class="card">
+          <h3>2) Személyre szabott terv</h3>
+          <p class="muted">Edzés + táplálkozási keretrendszer. Nem bonyolítjuk túl, hogy tudd tartani.</p>
+        </div>
+        <div class="card">
+          <h3>3) Követés és finomhangolás</h3>
+          <p class="muted">Visszajelzés alapján módosítunk. A cél: stabil fejlődés, nem tökéletesség.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mit kapsz pontosan -->
+  <section id="mit-kapsz" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Mit kapsz pontosan?</h2>
+        <p>Átlátható deliverable-ok – hogy tudd, mit várhatsz.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Edzés</h3>
+          <ul class="list">
+            <li>Gyakorlatok leírással + alternatívákkal</li>
+            <li>Progresszió: hogyan fejlődj biztonságosan</li>
+            <li>Otthoni és terem opciók</li>
+            <li>Rendszeres frissítés (csomagtól függ)</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Táplálkozás</h3>
+          <ul class="list">
+            <li>Egyszerű, tartható rendszer (nem “éheztetős”)</li>
+            <li>Praktikus tippek: gyors megoldások</li>
+            <li>A napirendedhez igazított keretek</li>
+            <li>Folyamatos finomhangolás (csomagtól függ)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="note">
+        <strong>Cél:</strong> formásodás + erő + jobb közérzet, úgy, hogy közben élhető marad az életed.
+      </div>
+    </div>
+  </section>
+
+  <!-- Bizalom -->
+  <section class="section">
+    <div class="wrap">
+      <div class="card">
+        <h2 style="margin:0 0 10px">Nem sablon – valódi személyre szabás</h2>
+        <p class="muted" style="margin:0;line-height:1.6">
+          Nem kapsz “copy-paste” programot. A terv a célodra, idődre, terhelhetőségedre készül.
+          Ha változik az élet (munka, stressz, utazás), hozzáigazítjuk.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vélemények (Giscus) -->
+  <section id="velemenyek" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Vélemények</h2>
+        <p>Próba verzió: itt fog működni a vélemény írás <span class="kbd">Giscus</span>-szal.</p>
+      </div>
+
+      <div class="card">
+        <div class="muted small" style="margin-bottom:10px">
+          Ide kell bemásolni a <strong>giscus.app</strong>-on generált scriptet.
+          (Repo: public + Discussions bekapcsolva.)
+        </div>
+
+        <div class="giscus"></div>
+
+        <!--
+          1) Kapcsold be a repo-ban a Discussions-t
+          2) Menj a giscus.app oldalra, válaszd ki a repót és a category-t
+          3) A generált scriptet másold be ide (ez alá)
+        -->
+
+        <!-- PÉLDA HELYŐRZŐ (NEM FOG MŰKÖDNI, amíg a saját adataiddal nem töltöd ki!)
+        <script src="https://giscus.app/client.js"
+          data-repo="tuskepal-ai/Fitnesslady"
+          data-repo-id="REPO_ID"
+          data-category="General"
+          data-category-id="CATEGORY_ID"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="dark"
+          data-lang="hu"
+          crossorigin="anonymous"
+          async>
+        </script>
+        -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Kapcsolat -->
+  <section id="kapcsolat" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Ingyenes konzultáció</h2>
+        <p>Próba verzió: itt később lehet WhatsApp link, űrlap, időpontfoglalás.</p>
+      </div>
+
+      <div class="card">
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#top">Vissza a tetejére</a>
+          <a class="btn btn-ghost" href="#csomagok">Csomagok</a>
+          <a class="btn btn-ghost" href="#velemenyek">Vélemények</a>
+        </div>
+
+        <div class="divider"></div>
+
+        <p class="muted" style="margin:12px 0 0;line-height:1.6">
+          📍 [Város / Terem neve] • ⏱️ [Időtartamok] • 💬 WhatsApp/Instagram: <strong>@fitnesslady</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="divider" style="margin-bottom:14px"></div>
+      <div>© <span id="y"></span> Fitness Lady • Próba verzió</div>
+    </div>
+  </footer>
 
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
