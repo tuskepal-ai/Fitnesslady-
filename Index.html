@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fitness Lady — Női edzésprogramok</title>
+  <meta name="description" content="Női edzésprogramok, amiket tényleg lehet tartani. Személyre szabott edzés és táplálkozás." />
+
+  <style>
+    :root{
+      --bg:#07060b;
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.70);
+      --muted2:rgba(255,255,255,.56);
+
+      --panel:rgba(18,10,24,.52);
+      --panel2:rgba(18,10,24,.40);
+      --stroke:rgba(255,255,255,.10);
+
+      --pink:#ff4fd8;
+      --pink2:#b14cff;
+
+      --radius:22px;
+      --shadow:0 18px 55px rgba(0,0,0,.55);
+      --max:1120px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:var(--bg);
+      overflow-x:hidden;
+    }
+
+    /* ===== FULL BACKGROUND (kép) ===== */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:url("hero.png");
+      background-size:cover;
+      background-position:center right;
+      background-repeat:no-repeat;
+      transform:scale(1.02);
+      z-index:-3;
+    }
+
+    /* ===== OVERLAY: NE NYELJE EL A HÁTTÉR RÉSZLETEIT ===== */
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(1100px 650px at 22% 14%, rgba(10,7,14,.10), rgba(10,7,14,.45) 62%, rgba(10,7,14,.62) 100%),
+        linear-gradient(to bottom, rgba(10,7,14,.18), rgba(10,7,14,.45));
+      z-index:-2;
+      pointer-events:none;
+    }
+
+    a{color:inherit;text-decoration:none}
+    .container{max-width:var(--max);margin:0 auto;padding:0 14px}
+
+    /* ===== TOP BAR (mint a képen) ===== */
+    .topbar{
+      position:fixed;top:0;left:0;right:0;z-index:50;
+      padding:18px 0;
+      background:rgba(10,8,14,.40);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px;font-size:16px}
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, #ffd0f6, var(--pink));
+      box-shadow:0 0 18px rgba(255,79,216,.7);
+      flex:0 0 auto;
+    }
+    .cta-pill{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:12px 16px;border-radius:999px;
+      background:linear-gradient(135deg,var(--pink),var(--pink2));
+      color:#140813;font-weight:800;
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:0 18px 46px rgba(255,79,216,.24);
+      white-space:nowrap;
+    }
+
+    /* ===== HERO ===== */
+    .hero{padding-top:92px;padding-bottom:34px}
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:26px;
+      align-items:start;
+      padding-top:24px;
+    }
+
+    .badge{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:8px 12px;border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      color:var(--muted);
+      font-size:13px;width:fit-content;
+      backdrop-filter:blur(10px);
+    }
+
+    h1{
+      margin:14px 0 12px;
+      font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+      font-weight:700;
+      line-height:1.05;
+      font-size: clamp(36px, 4.4vw, 64px);
+      letter-spacing:-0.8px;
+      text-shadow:0 10px 40px rgba(0,0,0,.55);
+    }
+
+    .lead{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:15.5px;
+      line-height:1.65;
+      max-width:56ch;
+      text-shadow:0 10px 30px rgba(0,0,0,.45);
+    }
+
+    .hero-actions{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
+
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:12px 18px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(20,12,26,.55);
+      backdrop-filter:blur(10px);
+      color:var(--text);
+      box-shadow:0 14px 40px rgba(0,0,0,.35);
+      cursor:pointer;
+      transition:transform .15s ease, border-color .15s ease;
+      white-space:nowrap;
+      font-weight:700;
+    }
+    .btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.20)}
+    .btn.primary{
+      background:linear-gradient(135deg,var(--pink),var(--pink2));
+      color:#140813;
+      border-color:rgba(255,255,255,.18);
+      box-shadow:0 18px 46px rgba(255,79,216,.22);
+      font-weight:800;
+    }
+
+    /* ===== CSOMAGOK (3 kártya) ===== */
+    .section-title{
+      font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+      font-size:34px;
+      letter-spacing:-.3px;
+      margin:34px 0 18px;
+    }
+
+    .packages{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+    .card{
+      position:relative;
+      background:var(--panel2);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(14px);
+      padding:18px;
+      overflow:hidden;
+    }
+
+    /* glow/edge mint a képen */
+    .card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(700px 160px at 20% 0%, rgba(255,79,216,.18), transparent 55%),
+        radial-gradient(700px 160px at 80% 0%, rgba(177,76,255,.14), transparent 60%);
+      opacity:.95;
+      pointer-events:none;
+    }
+    .card::after{
+      content:"";
+      position:absolute;left:-40%;right:-40%;top:-22px;height:56px;
+      background:radial-gradient(circle at 50% 50%, rgba(255,79,216,.30), transparent 62%);
+      filter:blur(8px);
+      opacity:.65;
+      pointer-events:none;
+    }
+    .card > *{position:relative}
+
+    .card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .card h3{
+      margin:0;
+      font-size:28px;
+      font-family: ui-serif, Georgia, serif;
+      letter-spacing:-.2px;
+    }
+    .card p{margin:0 0 12px;color:var(--muted);line-height:1.6;font-size:13.5px;max-width:40ch}
+
+    .tag{
+      font-size:12px;padding:6px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.07);
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .tag.hot{
+      color:#1b0717;
+      background:linear-gradient(135deg,#ffd8a8,#ff88e6);
+      border-color:rgba(255,255,255,.25);
+      box-shadow:0 12px 30px rgba(255,136,230,.18);
+      font-weight:800;
+    }
+
+    .list{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+    .list li{display:flex;align-items:flex-start;gap:10px;color:var(--muted);font-size:13px}
+    .check{
+      width:18px;height:18px;border-radius:6px;
+      background:rgba(255,79,216,.18);
+      border:1px solid rgba(255,79,216,.30);
+      box-shadow:0 0 22px rgba(255,79,216,.16);
+      flex:0 0 auto;
+      margin-top:1px;
+      position:relative;
+    }
+    .check:after{
+      content:"";
+      position:absolute;left:5px;top:4px;
+      width:6px;height:9px;
+      border-right:2px solid rgba(255,255,255,.85);
+      border-bottom:2px solid rgba(255,255,255,.85);
+      transform:rotate(40deg);
+    }
+
+    .card-actions{margin-top:14px;display:flex;justify-content:center}
+    .card-actions .btn{width:100%;max-width:240px}
+
+    /* ===== HOGYAN MŰKÖDIK (fejléc bal + gomb jobb) ===== */
+    .how-head{
+      margin-top: 34px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .rating{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}
+    .stars{letter-spacing:1px;color:rgba(255,214,98,.95)}
+    .how-grid{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+    /* ===== VÉLEMÉNYEK sáv (mint a képen alul) ===== */
+    .footer-row{
+      margin-top: 38px;
+      padding: 22px 0 54px;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .footer-inner{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:12px;flex-wrap:wrap;
+    }
+    .footer-title{
+      font-family: ui-serif, Georgia, serif;
+      font-size: 42px;
+      letter-spacing: -.4px;
+      margin:0;
+    }
+    .footer-sub{color:var(--muted2);font-size:14px;margin-left:10px}
+    .social{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+
+    /* ===== RESPONSIVE (hogy mobilon se csússzon szét) ===== */
+    @media (max-width: 980px){
+      body::before{background-position:center right;}
+      .hero-grid{grid-template-columns:1fr}
+      .packages{grid-template-columns:1fr}
+      .how-grid{grid-template-columns:1fr}
+      .section-title{font-size:30px}
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="#top" aria-label="Fitness Lady">
+        <span class="dot"></span>
+        <span>Fitness Lady</span>
+      </a>
+      <a class="cta-pill" href="#kapcsolat">Ingyenes konzultáció</a>
+    </div>
+  </header>
+
+  <main id="top" class="hero">
+    <div class="container">
+
+      <!-- HERO -->
+      <div class="hero-grid">
+        <div>
+          <div class="badge">✨ Prémium edzés • nőkre hangolva</div>
+
+          <h1>Női edzésprogramok,<br>amiket tényleg lehet tartani.</h1>
+
+          <p class="lead">
+            Nem sablon. Nem kompromisszum.<br>
+            Női edzésterv formához, erőhöz, jobb közérzethez — neked, az időbeosztásodhoz igazítva.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn primary" href="#kapcsolat">Ingyenes konzultáció</a>
+            <a class="btn" href="#csomagok">Csomagok</a>
+          </div>
+        </div>
+
+        <!-- jobb oldal üres: a háttérképen van az alak -->
+        <div></div>
+      </div>
+
+      <!-- CSOMAGOK -->
+      <div id="csomagok" class="section-title">Csomagok</div>
+
+      <div class="packages">
+        <div class="card">
+          <div class="card-top">
+            <h3>Start</h3>
+            <span class="tag"> </span>
+          </div>
+          <p>Ha kell egy tiszta terv és lendület.</p>
+          <ul class="list">
+            <li><span class="check"></span> Személyre szabott edzésterv</li>
+            <li><span class="check"></span> Alap táplálkozási keretrendszer</li>
+            <li><span class="check"></span> 1× kontroll / módosítás</li>
+          </ul>
+          <div class="card-actions">
+            <a class="btn primary" href="#kapcsolat">Konzultáció</a>
+          </div>
+        </div>
+
+        <div class="card" style="border-color: rgba(255,79,216,.26); box-shadow: 0 22px 70px rgba(255,79,216,.14), var(--shadow);">
+          <div class="card-top">
+            <h3>Balance</h3>
+            <span class="tag hot">Legnépszerűbb</span>
+          </div>
+          <p>Formálódás + erő, folyamatos visszajelzéssel.</p>
+          <ul class="list">
+            <li><span class="check"></span> Edzés + táplálkozás rendszer</li>
+            <li><span class="check"></span> Heti követés / finomhangolás</li>
+            <li><span class="check"></span> Szokások + napi mini célok</li>
+          </ul>
+          <div class="card-actions">
+            <a class="btn primary" href="#kapcsolat">Konzultáció</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <h3>Pro</h3>
+            <span class="tag"> </span>
+          </div>
+          <p>Maximális támogatás, nem túlerőltetés.</p>
+          <ul class="list">
+            <li><span class="check"></span> Praktikus tippek</li>
+            <li><span class="check"></span> Egyéni finomhangolás</li>
+            <li><span class="check"></span> Folyamatos támogatás</li>
+          </ul>
+          <div class="card-actions">
+            <a class="btn primary" href="#kapcsolat">Konzultáció</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOGYAN MŰKÖDIK -->
+      <div class="how-head">
+        <div>
+          <div class="section-title" style="margin:34px 0 8px;">Hogyan működik?</div>
+          <div class="rating">
+            <span class="stars">★★★★★</span>
+            <span>4.9</span>
+            <span style="color:var(--muted2);">és 26 értékelés</span>
+          </div>
+        </div>
+
+        <a class="btn" href="#velemenyek">💬 Írj véleményt</a>
+      </div>
+
+      <div class="how-grid">
+        <div class="card">
+          <h3 style="margin:0 0 12px;">Edzés</h3>
+          <ul class="list">
+            <li><span class="check"></span> Gyakorlatok leírással</li>
+            <li><span class="check"></span> Progresszió — mikor fejlődj</li>
+            <li><span class="check"></span> 1× kontroll / 4 hét</li>
+            <li><span class="check"></span> Ajánlott, 4 hét</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 style="margin:0 0 12px;">Táplálkozás</h3>
+          <ul class="list">
+            <li><span class="check"></span> Egyszerű, tartható rendszer</li>
+            <li><span class="check"></span> Napi ritmushoz igazítva</li>
+            <li><span class="check"></span> Rendszeres finomhangolás</li>
+            <li><span class="check"></span> Stabil energia + közérzet</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- VÉLEMÉNYEK alsó sáv -->
+      <div id="velemenyek" class="footer-row">
+        <div class="footer-inner">
+          <div style="display:flex; align-items:baseline; flex-wrap:wrap;">
+            <h2 class="footer-title">Vélemények</h2>
+            <div class="footer-sub">/ 26 valós visszajelzés</div>
+          </div>
+
+          <div class="social">
+            <a class="btn" href="#" onclick="alert('Itt majd WhatsApp link lesz');return false;">WhatsApp</a>
+            <a class="btn" href="#" onclick="alert('Itt majd Instagram link lesz');return false;">@fitnesslady</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="kapcsolat"></div>
+
+    </div>
+  </main>
+</body>
+</html>
