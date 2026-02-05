@@ -22,14 +22,10 @@
       --shadow: 0 18px 55px rgba(0,0,0,.55);
       --max: 1120px;
 
-      /* ==============================
-         CSAK A 2 HIBA JAVÍTÁSA
-         1) nő túl nagy -> zoom csökkent
-         2) háttér vágódik -> full-page fixed bg
-         ============================== */
-      --bg-x: 86%;      /* nő helye jobbra-balra */
-      --bg-y: 14%;      /* fej magassága */
-      --bg-zoom: 0.92;  /* <1 => kisebb nő */
+      /* háttér finomhangolás */
+      --bg-x: 86%;
+      --bg-y: 14%;
+      --bg-zoom: 0.92;
     }
 
     *{ box-sizing:border-box; }
@@ -47,28 +43,22 @@
     a{ color:inherit; text-decoration:none; }
     button{ font:inherit; }
 
-    /* =========================================
-       JAVÍTÁS #2: TELJES OLDALAS HÁTTÉR (FIX)
-       -> nem vágódik el scrollnál, folyamatos.
-       A hero háttér elemeket "kikapcsoljuk".
-       ========================================= */
+    /* FULL PAGE BG */
     .site-bg{
       position: fixed;
       inset: 0;
       z-index: -2;
-      background-image: url("/hero.png"); /* hero.png a gyökérben */
+      background-image: url("/hero.png");
       background-repeat: no-repeat;
       background-position: var(--bg-x) var(--bg-y);
-      background-size: calc(100% / var(--bg-zoom)); /* kisebb nő */
+      background-size: calc(100% / var(--bg-zoom));
       background-attachment: fixed;
     }
-
     .site-bg-overlay{
       position: fixed;
       inset: 0;
       z-index: -1;
       pointer-events: none;
-      /* Bal oldalt olvasható, jobb oldalt ne legyen túl sötét */
       background:
         linear-gradient(90deg,
           rgba(10,7,14,.52) 0%,
@@ -79,8 +69,7 @@
         radial-gradient(1100px 650px at 22% 35%, rgba(10,7,14,.08), rgba(10,7,14,.18) 62%, rgba(10,7,14,.22) 100%);
     }
 
-    /* A régi hero háttér elemeket nem töröljük (hogy máshoz ne nyúljunk),
-       csak elrejtjük, hogy ne duplázódjon és ne okozzon vágást. */
+    /* ne duplázódjon a régi hero bg */
     .hero-bg, .hero-overlay{ display:none !important; }
 
     /* ---------- Top Bar ---------- */
@@ -95,14 +84,19 @@
       background: rgba(10, 8, 14, .55);
       border-bottom: 1px solid rgba(255,255,255,.06);
     }
+
+    /* ====== BALRA IGAZÍTÁS (KÉRT JAVÍTÁS) ====== */
     .topbar-inner{
       max-width: var(--max);
-      margin: 0 auto;
+      margin: 0;                 /* nem középre */
+      padding-left: 14px;        /* azonos oldalpaddel */
+      padding-right: 14px;
       display:flex;
       align-items:center;
       justify-content: space-between;
       gap: 12px;
     }
+
     .brand{
       display:flex;
       align-items:center;
@@ -147,20 +141,21 @@
     /* ---------- Hero ---------- */
     .hero{
       position: relative;
-      padding-top: 80px; /* topbar */
+      padding-top: 80px;
       min-height: 88vh;
       display:flex;
       align-items: stretch;
-      justify-content:center;
+
+      /* ====== BALRA IGAZÍTÁS (KÉRT JAVÍTÁS) ====== */
+      justify-content: flex-start; /* ne középre */
     }
 
-    /* a hero-bg és overlay marad a DOM-ban, csak CSS-ben el van rejtve fent */
-
+    /* ====== BALRA IGAZÍTÁS (KÉRT JAVÍTÁS) ====== */
     .wrap{
       position: relative;
       width: 100%;
       max-width: var(--max);
-      margin: 0 auto;
+      margin: 0;                 /* nem középre */
       padding: 34px 14px 50px;
     }
 
@@ -295,11 +290,14 @@
       position: relative;
       padding: 52px 0;
     }
+
+    /* ====== BALRA IGAZÍTÁS (KÉRT JAVÍTÁS) ====== */
     .container{
       max-width: var(--max);
       padding: 0 14px;
-      margin: 0 auto;
+      margin: 0;                /* nem középre */
     }
+
     .section-title{
       font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
       font-size: 34px;
@@ -404,9 +402,11 @@
       background: rgba(10,8,14,.55);
       backdrop-filter: blur(10px);
     }
+
+    /* ====== BALRA IGAZÍTÁS (KÉRT JAVÍTÁS) ====== */
     .footer-inner{
       max-width: var(--max);
-      margin: 0 auto;
+      margin: 0;               /* nem középre */
       padding: 0 14px;
       display:flex;
       align-items:center;
@@ -445,7 +445,6 @@
 </head>
 
 <body>
-  <!-- JAVÍTÁS #2: teljes oldalas háttér réteg -->
   <div class="site-bg" aria-hidden="true"></div>
   <div class="site-bg-overlay" aria-hidden="true"></div>
 
@@ -474,7 +473,6 @@
 
   <!-- HERO -->
   <main id="top" class="hero">
-    <!-- maradnak a régi elemek, csak CSS-ben el vannak rejtve -->
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="hero-overlay" aria-hidden="true"></div>
 
