@@ -1,1 +1,857 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fitness Lady — Női edzésprogramok</title>
+  <meta name="description" content="Női edzésprogramok, amiket tényleg lehet tartani. Személyre szabott edzés és táplálkozás — a te életedhez igazítva." />
+
+  <style>
+    :root{
+      --bg: #07060b;
+      --panel: rgba(20, 12, 26, .62);
+      --panel2: rgba(20, 12, 26, .45);
+      --stroke: rgba(255,255,255,.10);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --muted2: rgba(255,255,255,.55);
+      --pink: #ff4fd8;
+      --pink2:#b14cff;
+      --radius: 22px;
+      --shadow: 0 18px 55px rgba(0,0,0,.55);
+      --max: 1120px;
+
+      /* HERO fókusz */
+      --hero-pos-x: 78%;
+      --hero-pos-y: 18%;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 30% 10%, rgba(255,79,216,.14), transparent 60%),
+                  radial-gradient(900px 500px at 75% 20%, rgba(177,76,255,.12), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: geometricPrecision;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    button{ font:inherit; }
+
+    /* ---------- Top Bar ---------- */
+    .topbar{
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      padding: 14px 14px;
+      backdrop-filter: blur(10px);
+      background: rgba(10, 8, 14, .42);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .topbar-inner{
+      max-width: var(--max);
+      margin: 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, #ffd0f6, var(--pink));
+      box-shadow: 0 0 18px rgba(255,79,216,.7);
+    }
+    .nav{
+      display:flex; align-items:center; gap: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .nav a{ opacity:.92; }
+    .nav a:hover{ opacity:1; color: var(--text); }
+
+    .rightbar{
+      display:flex; align-items:center; gap:10px;
+    }
+
+    /* Language pill (prémium) */
+    .lang-switch{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+    }
+    .lang-switch .lang{
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:.4px;
+      color: rgba(255,255,255,.55);
+      transition: color .18s ease, transform .18s ease;
+      cursor:pointer;
+    }
+    .lang-switch .lang:hover{ color: rgba(255,255,255,.88); transform: translateY(-1px); }
+    .lang-switch .lang.active{ color:#fff; }
+    .lang-switch .sep{ color: rgba(255,255,255,.35); }
+
+    .cta-pill{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--pink), var(--pink2));
+      color:#120613;
+      font-weight: 900;
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 14px 30px rgba(255,79,216,.22);
+      white-space: nowrap;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .cta-pill:hover{ transform: translateY(-1px); box-shadow: 0 18px 46px rgba(255,79,216,.22); }
+
+    .menu-btn{
+      width: 40px; height: 40px; border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--text);
+      display:none;
+      align-items:center; justify-content:center;
+      cursor:pointer;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero{
+      position: relative;
+      padding-top: 80px;
+      min-height: clamp(720px, 92svh, 980px);
+      display:flex;
+      align-items: stretch;
+      justify-content:center;
+      isolation: isolate;
+      overflow: hidden;
+    }
+
+    /* EREDETI háttér: éles marad */
+    .hero-bg{
+      position:absolute;
+      inset:0;
+      z-index:0;
+      background-image: url("/assets/hero.png");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: var(--hero-pos-x) var(--hero-pos-y);
+      filter:none;
+      transform: translateZ(0);
+      will-change: transform;
+    }
+
+    /* Overlay: bal oldali szöveghez kell, jobb oldalt hagyjuk élni */
+    .hero-overlay{
+      position:absolute;
+      inset:0;
+      z-index:1;
+      pointer-events:none;
+      background:
+        linear-gradient(90deg,
+          rgba(10,7,14,.38) 0%,
+          rgba(10,7,14,.22) 32%,
+          rgba(10,7,14,.08) 50%,
+          rgba(10,7,14,0) 58%
+        ),
+        radial-gradient(700px 420px at 24% 30%,
+          rgba(10,7,14,.05),
+          rgba(10,7,14,.12) 55%,
+          rgba(10,7,14,.18) 100%
+        );
+    }
+
+    .wrap{
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 46px 14px 56px;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 26px;
+      align-items: start;
+    }
+
+    .badge{
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      font-size: 13px;
+      width: fit-content;
+      backdrop-filter: blur(10px);
+    }
+
+    h1{
+      margin: 14px 0 12px;
+      font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+      font-weight: 750;
+      line-height: 1.02;
+      font-size: clamp(36px, 4.6vw, 64px);
+      letter-spacing: -1.1px;
+      text-shadow: 0 14px 55px rgba(0,0,0,.65);
+      max-width: 18ch;
+    }
+
+    .lead{
+      margin: 0 0 18px;
+      color: rgba(255,255,255,.74);
+      font-size: 16px;
+      line-height: 1.65;
+      max-width: 62ch;
+      text-shadow: 0 10px 30px rgba(0,0,0,.45);
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+      margin: 14px 0 10px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(20,12,26,.55);
+      backdrop-filter: blur(10px);
+      color: var(--text);
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+      cursor:pointer;
+      white-space: nowrap;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.20);
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+    }
+    .btn.primary{
+      background: linear-gradient(135deg, var(--pink), var(--pink2));
+      color:#140813;
+      border-color: rgba(255,255,255,.18);
+      box-shadow: 0 18px 46px rgba(255,79,216,.26);
+      font-weight: 900;
+    }
+    .btn.primary:hover{ box-shadow: 0 22px 70px rgba(255,79,216,.22); }
+    .btn.ghost{ background: rgba(255,255,255,.06); }
+
+    .meta-row{
+      display:flex; flex-wrap:wrap;
+      gap: 10px;
+      margin-top: 10px;
+      color: var(--muted2);
+      font-size: 13px;
+    }
+    .meta-pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(10px);
+    }
+
+    /* ---------- Cards ---------- */
+    .card{
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      overflow:hidden;
+      position: relative;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(700px 220px at 10% 0%, rgba(255,79,216,.22), transparent 55%),
+                  radial-gradient(700px 260px at 90% 20%, rgba(177,76,255,.18), transparent 60%);
+      opacity:.85;
+      pointer-events:none;
+    }
+    .card-inner{ position:relative; padding: 16px; }
+    .card-head{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      margin-bottom: 12px;
+    }
+    .card-title{ font-weight: 900; letter-spacing: .2px; }
+    .tag{
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.07);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* Rólam */
+    .about-grid{
+      display:grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 14px;
+      align-items: start;
+    }
+    .about-box{
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 18px;
+      padding: 14px;
+    }
+    .about-name{
+      font-family: ui-serif, Georgia, serif;
+      font-size: 20px;
+      margin: 0 0 6px;
+      letter-spacing: -0.2px;
+    }
+    .about-text{
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 13.5px;
+    }
+    .about-list{
+      margin: 12px 0 0;
+      padding: 0;
+      list-style:none;
+      display:grid;
+      gap: 8px;
+    }
+    .about-list li{
+      display:flex; gap:10px; align-items:flex-start;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Mit kapsz */
+    .hero-cards{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .mini{
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 18px;
+      padding: 14px;
+    }
+    .mini h3{ margin:0 0 8px; font-size: 14px; letter-spacing: .2px; }
+    .mini p{ margin:0; color: var(--muted); font-size: 12.8px; line-height: 1.5; }
+
+    .hero-rating{
+      margin-top: 12px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+    .stars{ letter-spacing: 1px; }
+
+    /* ---------- Sections ---------- */
+    section{ position: relative; padding: 52px 0; }
+    .container{ max-width: var(--max); padding: 0 14px; margin: 0 auto; }
+    .section-title{
+      font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+      font-size: 34px;
+      letter-spacing: -0.3px;
+      margin: 0 0 14px;
+    }
+    .section-sub{
+      color: var(--muted);
+      margin: 0 0 24px;
+      max-width: 70ch;
+      line-height: 1.6;
+    }
+
+    /* ---------- Packages ---------- */
+    .packages{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .pkg{
+      background: var(--panel2);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      padding: 18px;
+      position: relative;
+      overflow:hidden;
+    }
+    .pkg::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(800px 260px at 15% 0%, rgba(255,79,216,.18), transparent 55%),
+                  radial-gradient(700px 260px at 85% 15%, rgba(177,76,255,.14), transparent 60%);
+      opacity:.9;
+      pointer-events:none;
+    }
+    .pkg-inner{ position:relative; }
+    .pkg-top{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      margin-bottom: 10px;
+    }
+    .pkg h4{ margin:0; font-size: 22px; font-family: ui-serif, Georgia, serif; }
+    .tag.hot{
+      color:#1b0717;
+      background: linear-gradient(135deg, #ffd8a8, #ff88e6);
+      border-color: rgba(255,255,255,.25);
+      box-shadow: 0 12px 30px rgba(255,136,230,.18);
+      font-weight: 900;
+    }
+    .pkg p{ margin: 0 0 12px; color: var(--muted); line-height: 1.6; font-size: 13.5px; }
+    .list{ margin: 0; padding: 0; list-style:none; display:grid; gap:8px; }
+    .list li{ display:flex; align-items:flex-start; gap:10px; color: var(--muted); font-size: 13px; }
+
+    .check{
+      width: 18px; height: 18px; border-radius: 6px;
+      background: rgba(255,79,216,.18);
+      border: 1px solid rgba(255,79,216,.30);
+      box-shadow: 0 0 22px rgba(255,79,216,.16);
+      flex: 0 0 auto;
+      margin-top: 1px;
+      position:relative;
+    }
+    .check:after{
+      content:"";
+      position:absolute;
+      left: 5px; top: 4px;
+      width: 6px; height: 9px;
+      border-right: 2px solid rgba(255,255,255,.85);
+      border-bottom: 2px solid rgba(255,255,255,.85);
+      transform: rotate(40deg);
+    }
+
+    .pkg-actions{
+      display:flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    /* ---------- How it works ---------- */
+    .how-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* ---------- Footer ---------- */
+    .footer-strip{
+      padding: 18px 0 52px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      background: rgba(10,8,14,.55);
+      backdrop-filter: blur(10px);
+    }
+    .footer-inner{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 14px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 980px){
+      :root{ --hero-pos-x: 75%; --hero-pos-y: 10%; }
+
+      .hero-grid{ grid-template-columns: 1fr; }
+      .nav{ display:none; }
+      .menu-btn{ display:inline-flex; }
+
+      .hero-cards{ grid-template-columns: repeat(2, 1fr); }
+      .packages{ grid-template-columns: 1fr; }
+      .how-grid{ grid-template-columns: 1fr; }
+      .about-grid{ grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px){
+      .hero-cards{ grid-template-columns: 1fr; }
+    }
+
+    .glow-sep{
+      position:absolute;
+      left: 0; right: 0;
+      bottom: -2px;
+      height: 90px;
+      pointer-events:none;
+      background: radial-gradient(900px 70px at 50% 0%, rgba(255,79,216,.22), transparent 65%);
+      opacity: .9;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#top" aria-label="Fitness Lady">
+        <span class="dot"></span>
+        <span>Fitness Lady</span>
+      </a>
+
+      <nav class="nav" aria-label="Főmenü">
+        <a href="#csomagok">Csomagok</a>
+        <a href="#hogyan">Hogyan működik?</a>
+        <a href="#velemenyek">Vélemények</a>
+      </nav>
+
+      <div class="rightbar">
+        <div class="lang-switch" aria-label="Nyelv választás">
+          <a class="lang active" href="/hu/" onclick="localStorage.setItem('lang','hu')">HU</a>
+          <span class="sep">·</span>
+          <a class="lang" href="/de/" onclick="localStorage.setItem('lang','de')">DE</a>
+        </div>
+
+        <button class="menu-btn" id="menuBtn" aria-label="Menü">☰</button>
+        <a class="cta-pill" href="#kapcsolat">Ingyenes konzultáció</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main id="top" class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="badge">✨ Prémium edzés • nőkre hangolva</div>
+
+          <h1>Női edzésprogramok, <br>amiket tényleg lehet tartani.</h1>
+
+          <p class="lead">
+            Nem sablon. Nem kompromisszum. Női edzésterv formához, erőhöz, jobb közérzethez —
+            neked, az időbeosztásodhoz igazítva.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn primary" href="#kapcsolat">Ingyenes konzultáció</a>
+            <a class="btn" href="#csomagok">Csomagok</a>
+            <a class="btn ghost" href="#velemenyek">Írj véleményt</a>
+          </div>
+
+          <div class="meta-row">
+            <div class="meta-pill">📍 [Város / Terem neve]</div>
+            <div class="meta-pill">⏱️ [Időtartamok]</div>
+            <div class="meta-pill">💬 WhatsApp/Instagram: @fitnesslady</div>
+          </div>
+        </div>
+
+        <div></div>
+      </div>
+
+      <!-- RÓLAM kártya -->
+      <div class="card" style="margin-top:22px;">
+        <div class="card-inner">
+          <div class="card-head">
+            <div class="card-title">Rólam</div>
+            <div class="tag">Személyi edző</div>
+          </div>
+
+          <div class="about-grid">
+            <div class="about-box">
+              <p class="about-name">[Neved]</p>
+              <p class="about-text">
+                [2–3 mondat rólad: miben hiszel, hogyan edzel, kinek segítesz.]
+              </p>
+              <ul class="about-list">
+                <li><span class="check"></span> [Fókusz: női formálás / erő / közérzet]</li>
+                <li><span class="check"></span> [Tapasztalat: X év / X kliens]</li>
+                <li><span class="check"></span> [Módszer: tartható rutin, progresszió]</li>
+              </ul>
+            </div>
+
+            <div class="about-box">
+              <p class="about-name" style="margin-bottom:10px;">Miért működik?</p>
+              <p class="about-text">
+                Nem túlterhelés. Nem tiltólista. Olyan tervet kapsz, ami illik a napjaidhoz,
+                és amit hónapokig is fenn tudsz tartani — eredménnyel.
+              </p>
+
+              <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+                <a class="btn" href="#kapcsolat" style="padding:10px 14px;">Kérdezz WhatsAppon</a>
+                <a class="btn ghost" href="#kapcsolat" style="padding:10px 14px;">Instagram DM</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MIT KAPSZ kártya -->
+      <div class="card" style="margin-top:14px;">
+        <div class="card-inner">
+          <div class="card-head">
+            <div class="card-title">Mit kapsz pontosan?</div>
+            <div class="tag">Próba verzió</div>
+          </div>
+
+          <div class="hero-cards">
+            <div class="mini">
+              <h3>Edzés</h3>
+              <p>Heti terv + progresszió. Rövid, tartósan tartható struktúra.</p>
+            </div>
+            <div class="mini">
+              <h3>Táplálkozás</h3>
+              <p>Egyszerű rendszer, ami illik a napjaidhoz — nem fordítva.</p>
+            </div>
+            <div class="mini">
+              <h3>Kapcsolat</h3>
+              <p>Visszajelzés, finomhangolás, támogatás.</p>
+            </div>
+            <div class="mini">
+              <h3>Fókusz</h3>
+              <p>Formásodás • erő • közérzet — célhoz igazítva.</p>
+            </div>
+          </div>
+
+          <div class="hero-rating">
+            <div>
+              <span class="stars">★★★★★</span>
+              <span> 4.9</span>
+              <span style="color:var(--muted2);"> és 26 értékelés</span>
+            </div>
+            <a class="btn ghost" style="padding:10px 14px;" href="#velemenyek">💬 Írj véleményt</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="glow-sep" aria-hidden="true"></div>
+    </div>
+  </main>
+
+  <!-- CSOMAGOK -->
+  <section id="csomagok">
+    <div class="container">
+      <div class="section-title">Csomagok</div>
+      <p class="section-sub">
+        Válassz a célod és időbeosztásod alapján. Prémium érzet, tiszta struktúra, stabil rendszer.
+      </p>
+
+      <div class="packages">
+        <div class="pkg">
+          <div class="pkg-inner">
+            <div class="pkg-top">
+              <h4>Start</h4>
+              <span class="tag">Ajánlott: 4 hét</span>
+            </div>
+            <p>Ha kell egy tiszta terv és lendület.</p>
+            <ul class="list">
+              <li><span class="check"></span> Személyre szabott edzésterv</li>
+              <li><span class="check"></span> Alap táplálkozási keretrendszer</li>
+              <li><span class="check"></span> 1× kontroll / módosítás</li>
+            </ul>
+
+            <div class="pkg-actions">
+              <a class="btn" href="#kapcsolat" style="padding:10px 14px;">Konzultáció</a>
+              <a class="btn primary" href="#" onclick="alert('Itt lesz a vásárlás / fizetés link'); return false;" style="padding:10px 14px;">Vásárlás</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="pkg" style="border-color: rgba(255,79,216,.26); box-shadow: 0 22px 70px rgba(255,79,216,.14), var(--shadow);">
+          <div class="pkg-inner">
+            <div class="pkg-top">
+              <h4>Balance</h4>
+              <span class="tag hot">Legnépszerűbb</span>
+            </div>
+            <p>Formálódás + erő, folyamatos visszajelzéssel.</p>
+            <ul class="list">
+              <li><span class="check"></span> Edzés + táplálkozás rendszer</li>
+              <li><span class="check"></span> Heti követés / finomhangolás</li>
+              <li><span class="check"></span> Szokások + napi mini célok</li>
+            </ul>
+
+            <div class="pkg-actions">
+              <a class="btn" href="#kapcsolat" style="padding:10px 14px;">Konzultáció</a>
+              <a class="btn primary" href="#" onclick="alert('Itt lesz a vásárlás / fizetés link'); return false;" style="padding:10px 14px;">Vásárlás</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="pkg">
+          <div class="pkg-inner">
+            <div class="pkg-top">
+              <h4>Pro</h4>
+              <span class="tag">Ajánlott: 6–8 hét</span>
+            </div>
+            <p>Maximális támogatás, nem túlerőltetés.</p>
+            <ul class="list">
+              <li><span class="check"></span> Teljes személyre szabás</li>
+              <li><span class="check"></span> Gyakoribb kontroll + ütemezés</li>
+              <li><span class="check"></span> Teljesítmény + forma fókusz</li>
+            </ul>
+
+            <div class="pkg-actions">
+              <a class="btn" href="#kapcsolat" style="padding:10px 14px;">Konzultáció</a>
+              <a class="btn primary" href="#" onclick="alert('Itt lesz a vásárlás / fizetés link'); return false;" style="padding:10px 14px;">Vásárlás</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOGYAN MŰKÖDIK -->
+  <section id="hogyan">
+    <div class="container">
+      <div class="section-title">Hogyan működik?</div>
+      <p class="section-sub">Egyszerű, követhető rendszer — a való élethez igazítva.</p>
+
+      <div class="how-grid">
+        <div class="pkg">
+          <div class="pkg-inner">
+            <h4 style="margin:0 0 10px;">Edzés</h4>
+            <ul class="list">
+              <li><span class="check"></span> Gyakorlatok leírással</li>
+              <li><span class="check"></span> Progresszió — mikor lépsz tovább</li>
+              <li><span class="check"></span> Ajánlott ütemezés</li>
+              <li><span class="check"></span> Fenntartható terhelés</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pkg">
+          <div class="pkg-inner">
+            <h4 style="margin:0 0 10px;">Táplálkozás</h4>
+            <ul class="list">
+              <li><span class="check"></span> Egyszerű, tartható rend</li>
+              <li><span class="check"></span> A napirendedhez igazítva</li>
+              <li><span class="check"></span> Rendszeres finomhangolás</li>
+              <li><span class="check"></span> Stabil energiák, jobb közérzet</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VÉLEMÉNYEK -->
+  <section id="velemenyek">
+    <div class="container">
+      <div class="section-title">Vélemények <span style="color:var(--muted2); font-size:16px; font-family:inherit;">/ 26 valós visszajelzés</span></div>
+      <p class="section-sub">Itt később jöhet a Giscus / vélemény modul. Most a dizájnt tartjuk.</p>
+
+      <div class="pkg">
+        <div class="pkg-inner" style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+          <div style="color:var(--muted); font-size:14px;">
+            💬 Szeretnél véleményt írni? (Giscus később)
+          </div>
+          <a class="btn primary" href="#kapcsolat">Írj véleményt</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KAPCSOLAT -->
+  <section id="kapcsolat">
+    <div class="container">
+      <div class="section-title">Kapcsolat</div>
+      <p class="section-sub">Ingyenes konzultációhoz írj WhatsAppon vagy Instagramon.</p>
+
+      <div class="pkg">
+        <div class="pkg-inner" style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn" href="#" onclick="alert('Itt majd WhatsApp link lesz'); return false;">WhatsApp</a>
+            <a class="btn" href="#" onclick="alert('Itt majd Instagram link lesz'); return false;">Instagram</a>
+          </div>
+          <div style="color:var(--muted); font-size:13px;">
+            📍 [Város / Terem neve] • ⏱️ [Időtartamok] • @fitnesslady
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer-strip">
+    <div class="footer-inner">
+      <div>© <span id="y"></span> Fitness Lady</div>
+      <div>Próba verzió • dizájn egyeztetés</div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    // Mobil menü (egyszerű)
+    const menuBtn = document.getElementById("menuBtn");
+    let open = false;
+
+    menuBtn?.addEventListener("click", () => {
+      open = !open;
+      if(open){
+        const nav = document.createElement("div");
+        nav.id = "mobileNav";
+        nav.style.position = "fixed";
+        nav.style.top = "62px";
+        nav.style.left = "14px";
+        nav.style.right = "14px";
+        nav.style.zIndex = "60";
+        nav.style.background = "rgba(20,12,26,.72)";
+        nav.style.border = "1px solid rgba(255,255,255,.10)";
+        nav.style.borderRadius = "18px";
+        nav.style.backdropFilter = "blur(14px)";
+        nav.style.boxShadow = "0 20px 70px rgba(0,0,0,.55)";
+        nav.style.padding = "12px";
+        nav.innerHTML = `
+          <a href="#csomagok" style="display:block; padding:10px 10px; color:rgba(255,255,255,.86)">Csomagok</a>
+          <a href="#hogyan" style="display:block; padding:10px 10px; color:rgba(255,255,255,.86)">Hogyan működik?</a>
+          <a href="#velemenyek" style="display:block; padding:10px 10px; color:rgba(255,255,255,.86)">Vélemények</a>
+          <a href="#kapcsolat" style="display:block; padding:10px 10px; color:rgba(255,255,255,.86)">Kapcsolat</a>
+        `;
+        document.body.appendChild(nav);
+      } else {
+        document.getElementById("mobileNav")?.remove();
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      const nav = document.getElementById("mobileNav");
+      if(!nav) return;
+      if(e.target === menuBtn) return;
+      if(nav.contains(e.target)) {
+        nav.remove();
+        open = false;
+      }
+    });
+  </script>
+</body>
+</html>
 
