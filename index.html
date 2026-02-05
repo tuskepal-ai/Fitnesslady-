@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Fitness Lady — Nyelv választás</title>
-  <meta name="description" content="Válaszd ki, milyen nyelven szeretnéd megnézni az oldalt. / Wähle aus, in welcher Sprache du die Website ansehen möchtest." />
+  <title>Fitness Lady — Válassz nyelvet</title>
+  <meta name="description" content="Válassz nyelvet: Magyar vagy Deutsch." />
 
   <style>
     :root{
       --bg: #07060b;
+      --panel: rgba(20, 12, 26, .62);
+      --panel2: rgba(20, 12, 26, .45);
+      --stroke: rgba(255,255,255,.10);
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.70);
-      --stroke: rgba(255,255,255,.10);
-      --panel: rgba(20, 12, 26, .60);
-      --panel2: rgba(20, 12, 26, .42);
       --pink: #ff4fd8;
       --pink2:#b14cff;
-      --radius: 24px;
+      --radius: 22px;
       --shadow: 0 18px 55px rgba(0,0,0,.55);
       --max: 980px;
     }
@@ -27,40 +27,49 @@
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
       color: var(--text);
-      background:
-        radial-gradient(1200px 700px at 25% 12%, rgba(255,79,216,.16), transparent 60%),
-        radial-gradient(1000px 600px at 78% 18%, rgba(177,76,255,.14), transparent 60%),
-        radial-gradient(900px 520px at 50% 92%, rgba(255,79,216,.10), transparent 60%),
-        var(--bg);
+      background: var(--bg);
       overflow-x:hidden;
     }
 
-    a{ color:inherit; text-decoration:none; }
-    button{ font:inherit; }
-
-    /* top subtle vignette */
-    .vignette{
-      position: fixed; inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(1200px 700px at 50% 20%, rgba(0,0,0,.00), rgba(0,0,0,.45) 78%, rgba(0,0,0,.62) 100%);
-      opacity:.9;
-    }
-
-    .wrap{
-      min-height:100%;
+    /* Background */
+    .page{
+      position: relative;
+      min-height: 100vh;
       display:flex;
       align-items:center;
       justify-content:center;
       padding: 34px 14px;
-      position: relative;
+    }
+
+    .bg{
+      position:absolute; inset:0;
+      background-image: url("assets/hero.png");
+      background-size: cover;
+      background-position: center right;
+      background-repeat: no-repeat;
+      transform: scale(1.02);
+      filter: none;
+    }
+
+    /* Light overlay: readable, but not too dark */
+    .overlay{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(1100px 650px at 20% 35%, rgba(10,7,14,.18), rgba(10,7,14,.55) 62%, rgba(10,7,14,.62) 100%),
+        linear-gradient(to bottom, rgba(10,7,14,.18), rgba(10,7,14,.55));
+      pointer-events:none;
+    }
+
+    .wrap{
+      position:relative;
+      width:100%;
+      max-width: var(--max);
     }
 
     .card{
-      width: min(720px, 100%);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border: 1px solid var(--stroke);
-      border-radius: var(--radius);
+      background: rgba(20, 12, 26, .62);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 26px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(16px);
       overflow:hidden;
@@ -71,216 +80,173 @@
       content:"";
       position:absolute; inset:-2px;
       background:
-        radial-gradient(900px 280px at 15% 0%, rgba(255,79,216,.20), transparent 55%),
-        radial-gradient(900px 320px at 90% 18%, rgba(177,76,255,.16), transparent 60%);
-      opacity:.9;
+        radial-gradient(700px 220px at 10% 0%, rgba(255,79,216,.22), transparent 55%),
+        radial-gradient(700px 260px at 90% 20%, rgba(177,76,255,.18), transparent 60%);
+      opacity:.85;
       pointer-events:none;
     }
 
-    .inner{
-      position:relative;
-      padding: 22px;
-    }
+    .inner{ position:relative; padding: 22px; }
 
     .brand{
-      display:flex; align-items:center; gap:10px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
       font-weight: 800;
-      letter-spacing:.2px;
+      letter-spacing: .2px;
       margin-bottom: 10px;
+      opacity: .95;
     }
     .dot{
-      width:12px;height:12px;border-radius:99px;
+      width:10px;height:10px;border-radius:99px;
       background: radial-gradient(circle at 30% 30%, #ffd0f6, var(--pink));
-      box-shadow: 0 0 22px rgba(255,79,216,.65);
-      flex:0 0 auto;
+      box-shadow: 0 0 18px rgba(255,79,216,.7);
     }
 
     h1{
-      margin: 8px 0 8px;
+      margin: 8px 0 10px;
       font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
-      font-size: clamp(30px, 4vw, 46px);
+      font-weight: 700;
       line-height: 1.05;
-      letter-spacing: -0.6px;
-      text-shadow: 0 12px 45px rgba(0,0,0,.55);
+      font-size: clamp(32px, 4.2vw, 54px);
+      letter-spacing: -0.8px;
+      text-shadow: 0 10px 40px rgba(0,0,0,.55);
     }
 
     .lead{
       margin: 0 0 18px;
       color: var(--muted);
-      font-size: 14.8px;
+      font-size: 15.5px;
       line-height: 1.65;
-      text-shadow: 0 10px 35px rgba(0,0,0,.45);
+      max-width: 70ch;
+      text-shadow: 0 10px 30px rgba(0,0,0,.45);
     }
 
-    .grid{
+    .lang-grid{
       display:grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-top: 12px;
+      gap: 14px;
+      margin-top: 14px;
     }
 
-    .lang-btn{
+    .lang{
       display:flex;
       align-items:center;
       justify-content: space-between;
-      gap: 14px;
-      padding: 14px 14px;
+      gap: 12px;
+      padding: 16px 16px;
       border-radius: 18px;
-      background: rgba(20, 12, 26, .46);
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 14px 45px rgba(0,0,0,.38);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 14px 40px rgba(0,0,0,.25);
       cursor: pointer;
-      transition: transform .14s ease, border-color .14s ease, background .14s ease;
+      text-decoration:none;
+      color: var(--text);
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
     }
-    .lang-btn:hover{
+    .lang:hover{
       transform: translateY(-1px);
-      border-color: rgba(255,255,255,.18);
-      background: rgba(20, 12, 26, .54);
+      border-color: rgba(255,255,255,.20);
+      background: rgba(255,255,255,.075);
     }
 
-    .lang-txt{
+    .lang-left{
       display:flex;
-      flex-direction: column;
+      flex-direction:column;
       gap: 4px;
       min-width: 0;
     }
     .lang-title{
+      font-weight: 850;
       font-size: 18px;
-      font-weight: 800;
-      letter-spacing:.2px;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
+      letter-spacing: .1px;
     }
-    .lang-sub{
-      font-size: 13px;
-      color: rgba(255,255,255,.68);
-      line-height: 1.35;
-      display:flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .lang-sub span{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
+    .lang-desc{
+      color: rgba(255,255,255,.72);
+      font-size: 14px;
     }
 
     .pill{
-      flex: 0 0 auto;
-      width: 54px; height: 36px;
+      width: 54px;
+      height: 42px;
       border-radius: 999px;
       display:flex;
       align-items:center;
       justify-content:center;
       font-weight: 900;
-      letter-spacing:.5px;
+      letter-spacing: .8px;
+      color: #140813;
       background: linear-gradient(135deg, var(--pink), var(--pink2));
-      color:#140813;
-      border: 1px solid rgba(255,255,255,.18);
-      box-shadow: 0 16px 36px rgba(255,79,216,.18);
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: 0 18px 46px rgba(255,79,216,.22);
+      flex: 0 0 auto;
     }
 
     .footer{
-      margin-top: 14px;
       display:flex;
-      align-items:center;
       justify-content: space-between;
       gap: 10px;
-      flex-wrap: wrap;
-      color: rgba(255,255,255,.55);
-      font-size: 12.8px;
+      margin-top: 14px;
+      color: rgba(255,255,255,.60);
+      font-size: 13px;
     }
 
-    .tiny{
-      opacity:.9;
-    }
-
-    /* Mobile spacing */
     @media (max-width: 520px){
       .inner{ padding: 18px; }
-      .lang-sub span{ padding: 6px 9px; }
-      .pill{ width: 52px; height: 34px; }
+      .footer{ flex-direction: column; align-items:flex-start; }
+      .pill{ width: 52px; }
     }
   </style>
 </head>
 
 <body>
-  <div class="vignette" aria-hidden="true"></div>
+  <main class="page">
+    <div class="bg" aria-hidden="true"></div>
+    <div class="overlay" aria-hidden="true"></div>
 
-  <main class="wrap">
-    <section class="card" aria-label="Nyelvválasztás / Sprachwahl">
-      <div class="inner">
-        <div class="brand">
-          <span class="dot" aria-hidden="true"></span>
-          <span>Fitness Lady</span>
-        </div>
+    <div class="wrap">
+      <section class="card" role="region" aria-label="Nyelvválasztás">
+        <div class="inner">
+          <div class="brand">
+            <span class="dot"></span>
+            <span>Fitness Lady</span>
+          </div>
 
-        <!-- Cím + leírás KÉT NYELVEN -->
-        <h1>Válassz nyelvet <span style="opacity:.55;">/ Sprache auswählen</span></h1>
-        <p class="lead">
-          Válaszd ki, milyen nyelven szeretnéd megnézni az oldalt.
-          <br>
-          <span class="tiny">Wähle aus, in welcher Sprache du die Website ansehen möchtest.</span>
-        </p>
+          <h1>Válassz nyelvet</h1>
+          <p class="lead">Válaszd ki, milyen nyelven szeretnéd megnézni az oldalt.</p>
 
-        <div class="grid">
-          <!-- HU -->
-          <a class="lang-btn" href="/hu/" data-lang="hu" aria-label="Magyar / Ungarisch">
-            <div class="lang-txt">
-              <div class="lang-title">Magyar <span style="opacity:.55;">/ Ungarisch</span></div>
-              <div class="lang-sub">
-                <span>Női edzésprogramok</span>
-                </div>
-            </div>
-            <div class="pill">HU</div>
-          </a>
-
-          <!-- DE -->
-          <a class="lang-btn" href="/de/" data-lang="de" aria-label="Német / Deutsch">
-            <div class="lang-txt">
-              <div class="lang-title">Német <span style="opacity:.55;">/ Deutsch</span></div>
-              <div class="lang-sub">
-                
-                <span>Trainingsprogramme für Frauen</span>
+          <div class="lang-grid">
+            <!-- HU: csak magyar -->
+            <a class="lang" href="hu/" aria-label="Magyar oldal megnyitása">
+              <div class="lang-left">
+                <div class="lang-title">Magyar</div>
+                <div class="lang-desc">Női edzésprogramok</div>
               </div>
-            </div>
-            <div class="pill">DE</div>
-          </a>
-        </div>
+              <div class="pill">HU</div>
+            </a>
 
-        <!-- Footer: CSAK copyright, nincs jobb alsó extra szöveg -->
-        <div class="footer">
-          <div>© <span id="y"></span> Fitness Lady</div>
-          <div style="opacity:.75;">fitnesslady.ch</div>
+            <!-- DE: csak német -->
+            <a class="lang" href="de/" aria-label="Deutsche Version öffnen">
+              <div class="lang-left">
+                <div class="lang-title">Deutsch</div>
+                <div class="lang-desc">Trainingsprogramme für Frauen</div>
+              </div>
+              <div class="pill">DE</div>
+            </a>
+          </div>
+
+          <div class="footer">
+            <div>© <span id="y"></span> Fitness Lady</div>
+            <div>fitnesslady.ch</div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   </main>
 
   <script>
-    // év
     document.getElementById("y").textContent = new Date().getFullYear();
-
-    // prémium UX: megjegyzi a választást
-    document.querySelectorAll('[data-lang]').forEach(el => {
-      el.addEventListener('click', () => {
-        try { localStorage.setItem('fl_lang', el.getAttribute('data-lang')); } catch(e) {}
-      });
-    });
-
-    // opcionális: ha már választott, automatikusan oda küldi
-    // (ha nem akarod, töröld ezt a blokkot)
-    (function autoRedirect(){
-      let pref = null;
-      try { pref = localStorage.getItem('fl_lang'); } catch(e) {}
-      if(pref === 'hu' && location.pathname === '/') location.replace('/hu/');
-      if(pref === 'de' && location.pathname === '/') location.replace('/de/');
-    })();
   </script>
 </body>
 </html>
+
