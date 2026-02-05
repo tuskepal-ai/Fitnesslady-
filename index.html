@@ -134,15 +134,15 @@
 
     /* Overlay: stabil pseudo-element (nem külön div) */
     .hero-bg::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      z-index: 1;
-      pointer-events:none;
+  content:"";
+  position:absolute; inset:0;
+  pointer-events:none;
 
-      background:
-        radial-gradient(1100px 650px at 22% 35%, rgba(10,7,14,.20), rgba(10,7,14,.62) 62%, rgba(10,7,14,.78) 100%),
-        linear-gradient(to bottom, var(--overlay-start), var(--overlay-end));
+  background:
+    radial-gradient(900px 520px at 22% 32%, rgba(10,7,14,.15), rgba(10,7,14,.55) 62%, rgba(10,7,14,.70) 100%),
+    linear-gradient(90deg, rgba(10,7,14,.62) 0%, rgba(10,7,14,.35) 40%, rgba(10,7,14,.10) 65%, rgba(10,7,14,0) 100%);
+}
+
     }
 
     .wrap{
