@@ -3,191 +3,272 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Fitness Lady — Nyelvválasztás</title>
+  <title>Fitness Lady — Női edzésprogramok</title>
+  <meta name="description" content="Női edzésprogramok, amiket tényleg lehet tartani." />
 
   <style>
     :root{
-      --bg:#07060b;
-      --panel: rgba(20,12,26,.62);
-      --panel2: rgba(20,12,26,.45);
-      --stroke: rgba(255,255,255,.12);
+      --bg: #07060b;
+      --panel: rgba(20, 12, 26, .62);
+      --panel2: rgba(20, 12, 26, .45);
+      --stroke: rgba(255,255,255,.10);
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.70);
-      --pink:#ff4fd8;
+      --muted2: rgba(255,255,255,.55);
+      --pink: #ff4fd8;
       --pink2:#b14cff;
-      --radius:18px;
-      --shadow:0 18px 55px rgba(0,0,0,.55);
+      --radius: 22px;
+      --shadow: 0 18px 55px rgba(0,0,0,.55);
+      --max: 1120px;
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
       margin:0;
-      display:grid;
-      place-items:center;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       color:var(--text);
-      overflow:hidden;
+      overflow-x:hidden;
 
-      /* ✅ EREDETI HERO HÁTTÉR */
-      background-image:
-        radial-gradient(1200px 700px at 20% 15%, rgba(255,79,216,.14), transparent 60%),
-        radial-gradient(1000px 650px at 80% 10%, rgba(177,76,255,.12), transparent 60%),
-        url("../assets/hero.png");
-
-      background-size: auto, auto, cover;
-      background-position: 0 0, 0 0, center right;
-      background-repeat: no-repeat;
-    }
-
-    /* enyhe overlay – NEM sötétíti agyon */
-    .overlay{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
+      /* fallback prémium háttér akkor is, ha a kép nem tölt be */
       background:
-        radial-gradient(900px 600px at 20% 30%, rgba(10,7,14,.20), rgba(10,7,14,.45) 60%, rgba(10,7,14,.55) 100%),
-        linear-gradient(to bottom, rgba(10,7,14,.18), rgba(10,7,14,.42));
+        radial-gradient(1200px 600px at 30% 10%, rgba(255,79,216,.14), transparent 60%),
+        radial-gradient(900px 500px at 75% 20%, rgba(177,76,255,.12), transparent 60%),
+        var(--bg);
     }
 
-    /* ===== NYELVVÁLASZTÓ KÁRTYA ===== */
-    .card{
-      position:relative;
-      width:min(420px, 92vw); /* 🔥 FELE AKKORA */
-      background:var(--panel);
-      border:1px solid var(--stroke);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(14px);
-      padding:14px; /* 🔥 kisebb */
-    }
+    a{ color:inherit; text-decoration:none; }
 
-    .brand{
+    /* TOPBAR */
+    .topbar{
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      padding: 14px 14px;
+      backdrop-filter: blur(10px);
+      background: rgba(10, 8, 14, .55);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .topbar-inner{
+      max-width: var(--max);
+      margin: 0 auto;
       display:flex;
       align-items:center;
-      gap:8px;
-      font-weight:800;
-      font-size:13px;
-      margin-bottom:6px;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap: 10px;
+      font-weight: 800;
     }
     .dot{
-      width:8px;height:8px;border-radius:50%;
+      width:10px;height:10px;border-radius:99px;
       background: radial-gradient(circle at 30% 30%, #ffd0f6, var(--pink));
-      box-shadow:0 0 14px rgba(255,79,216,.7);
+      box-shadow: 0 0 18px rgba(255,79,216,.7);
+    }
+    .nav{
+      display:flex; align-items:center; gap: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .nav a:hover{ color: var(--text); }
+
+    .cta-pill{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--pink), var(--pink2));
+      color:#120613;
+      font-weight: 900;
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 14px 30px rgba(255,79,216,.22);
+      white-space: nowrap;
     }
 
-    h1{
-      margin:2px 0 6px;
-      font-family: ui-serif, Georgia, serif;
-      font-size:22px; /* 🔥 kisebb */
-      line-height:1.05;
-      letter-spacing:-.4px;
+    /* HERO */
+    .hero{
+      position: relative;
+      padding-top: 80px;
+      min-height: 88vh;
+      display:flex;
+      align-items: stretch;
+      justify-content:center;
+    }
+    .hero-bg{
+      position:absolute; inset:0;
+
+      /* ✅ EZ A LÉNYEG: mindig a ROOT hero.png */
+      background-image: url("/hero.png");
+      background-size: cover;
+      background-position: center right;
+      background-repeat: no-repeat;
+
+      transform: scale(1.02);
+      filter: none; /* ✅ éles */
     }
 
-    .sub{
-      margin:0 0 12px;
-      font-size:13px;
-      color:var(--muted);
+    /* ✅ finom sötétítés: nem túl sötét jobb oldalon */
+    .hero-overlay{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(1100px 650px at 22% 35%, rgba(10,7,14,.10), rgba(10,7,14,.40) 62%, rgba(10,7,14,.52) 100%),
+        linear-gradient(to bottom, rgba(10,7,14,.08), rgba(10,7,14,.30));
+      pointer-events:none;
     }
 
-    .list{
+    .wrap{
+      position: relative;
+      width: 100%;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 34px 14px 50px;
+    }
+
+    .hero-grid{
       display:grid;
-      gap:8px;
-    }
-
-    .lang{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:8px 10px; /* 🔥 FELE */
-      background:var(--panel2);
-      border:1px solid var(--stroke);
-      border-radius:14px;
-      text-decoration:none;
-      color:inherit;
-      transition:.15s ease;
-    }
-    .lang:hover{
-      transform:translateY(-1px);
-      border-color:rgba(255,255,255,.20);
-    }
-
-    .txt{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
-    .title{
-      font-size:15px;
-      font-weight:800;
-    }
-    .desc{
-      font-size:12px;
-      color:var(--muted);
+      grid-template-columns: 1.2fr .8fr;
+      gap: 26px;
+      align-items: start;
     }
 
     .badge{
-      width:30px;height:30px;
-      border-radius:50%;
-      display:grid;
-      place-items:center;
-      font-size:11px;
-      font-weight:900;
-      color:#120613;
-      background: linear-gradient(135deg, var(--pink), var(--pink2));
-      box-shadow:0 8px 22px rgba(255,79,216,.35);
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      font-size: 13px;
+      width: fit-content;
+      backdrop-filter: blur(10px);
     }
 
-    .foot{
-      margin-top:8px;
-      padding-top:6px;
-      border-top:1px solid rgba(255,255,255,.08);
-      font-size:11.5px;
-      color:rgba(255,255,255,.55);
-      text-align:center;
+    h1{
+      margin: 14px 0 12px;
+      font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+      font-weight: 700;
+      line-height: 1.05;
+      font-size: clamp(34px, 4.3vw, 62px);
+      letter-spacing: -0.8px;
+      text-shadow: 0 10px 40px rgba(0,0,0,.55);
     }
+
+    .lead{
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 15.5px;
+      line-height: 1.65;
+      max-width: 56ch;
+      text-shadow: 0 10px 30px rgba(0,0,0,.45);
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+      margin: 14px 0 10px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(20,12,26,.55);
+      backdrop-filter: blur(10px);
+      color: var(--text);
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+      cursor:pointer;
+      transition: transform .15s ease, border-color .15s ease;
+      white-space: nowrap;
+    }
+    .btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.20); }
+    .btn.primary{
+      background: linear-gradient(135deg, var(--pink), var(--pink2));
+      color:#140813;
+      border-color: rgba(255,255,255,.18);
+      box-shadow: 0 18px 46px rgba(255,79,216,.26);
+      font-weight: 900;
+    }
+    .btn.ghost{ background: rgba(255,255,255,.06); }
+
+    .meta-row{
+      display:flex; flex-wrap:wrap;
+      gap: 10px;
+      margin-top: 10px;
+      color: var(--muted2);
+      font-size: 13px;
+    }
+    .meta-pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(10px);
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .hero-bg{ background-position: center right; }
+      .nav{ display:none; }
+    }
+
+    html{ scroll-behavior:smooth; }
   </style>
 </head>
 
 <body>
-  <div class="overlay"></div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/"><span class="dot"></span><span>Fitness Lady</span></a>
 
-  <section class="card">
-    <div class="brand">
-      <span class="dot"></span>
-      <span>Fitness Lady</span>
+      <nav class="nav" aria-label="Főmenü">
+        <a href="#csomagok">Csomagok</a>
+        <a href="#hogyan">Hogyan működik?</a>
+        <a href="#velemenyek">Vélemények</a>
+      </nav>
+
+      <div style="display:flex; align-items:center; gap:10px;">
+        <a class="cta-pill" href="#kapcsolat">Ingyenes konzultáció</a>
+      </div>
     </div>
+  </header>
 
-    <h1>Válassz nyelvet</h1>
-    <p class="sub">Válaszd ki, milyen nyelven szeretnéd megtekinteni az oldalt.</p>
+  <main class="hero" id="top">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-overlay" aria-hidden="true"></div>
 
-    <div class="list">
-      <a class="lang" href="/hu/">
-        <div class="txt">
-          <div class="title">Magyar</div>
-          <div class="desc">Női edzésprogramok</div>
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="badge">✨ Prémium edzés • nőkre hangolva</div>
+          <h1>Női edzésprogramok,<br>amiket tényleg lehet tartani.</h1>
+          <p class="lead">
+            Nem sablon. Nem kompromisszum. Női edzésterv formához, erőhöz, jobb közérzethez —
+            neked, az időbeosztásodhoz igazítva.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn primary" href="#kapcsolat">Ingyenes konzultáció</a>
+            <a class="btn" href="#csomagok">Csomagok</a>
+            <a class="btn ghost" href="/">Nyelv</a>
+          </div>
+
+          <div class="meta-row">
+            <div class="meta-pill">📍 [Város / Terem neve]</div>
+            <div class="meta-pill">⏱️ [Időtartamok]</div>
+            <div class="meta-pill">💬 WhatsApp/Instagram: @fitnesslady</div>
+          </div>
         </div>
-        <div class="badge">HU</div>
-      </a>
 
-      <a class="lang" href="/de/">
-        <div class="txt">
-          <div class="title">Deutsch</div>
-          <div class="desc">Trainingsprogramme für Frauen</div>
-        </div>
-        <div class="badge">DE</div>
-      </a>
+        <div></div>
+      </div>
     </div>
-
-    <div class="foot">
-      © <span id="y"></span> Fitness Lady
-    </div>
-  </section>
-
-  <script>
-    document.getElementById("y").textContent = new Date().getFullYear();
-  </script>
+  </main>
 </body>
 </html>
-
