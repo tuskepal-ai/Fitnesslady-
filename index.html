@@ -4,253 +4,169 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Fitness Lady — Nyelvválasztó</title>
-  <meta name="description" content="Válaszd ki a kívánt nyelvet." />
 
   <style>
     :root{
-      --bg: #07060b;
+      --bg:#07060b;
+      --panel: rgba(20,12,26,.65);
+      --panel2: rgba(20,12,26,.45);
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.72);
-
       --pink:#ff4fd8;
       --pink2:#b14cff;
-
-      --panel: rgba(20, 12, 26, .62);
-      --panel2: rgba(20, 12, 26, .42);
-
-      --radius: 22px;
-      --shadow: 0 18px 55px rgba(0,0,0,.55);
+      --radius:16px;
+      --shadow:0 12px 36px rgba(0,0,0,.45);
     }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      color: var(--text);
-      background:
-        radial-gradient(1200px 700px at 20% 15%, rgba(255,79,216,.18), transparent 60%),
-        radial-gradient(1000px 650px at 80% 10%, rgba(177,76,255,.16), transparent 60%),
-        radial-gradient(900px 650px at 40% 85%, rgba(255,79,216,.10), transparent 60%),
-        var(--bg);
-      overflow-x:hidden;
-    }
-
-    a{ color:inherit; text-decoration:none; }
-
-    /* page layout */
-    .page{
-      min-height:100vh;
       display:grid;
       place-items:center;
-      padding: 22px 14px; /* kisebb külső tér */
-    }
-
-    /* outer glow behind card (kisebb max szélesség) */
-    .halo{
-      position:relative;
-      width: min(680px, 92vw); /* ✅ KISEBB */
-    }
-    .halo::before{
-      content:"";
-      position:absolute;
-      inset:-22px; /* kisebb halo */
       background:
-        radial-gradient(820px 340px at 30% 20%, rgba(255,79,216,.22), transparent 55%),
-        radial-gradient(820px 380px at 80% 30%, rgba(177,76,255,.18), transparent 60%);
-      filter: blur(16px);
-      opacity:.85;
-      pointer-events:none;
+        radial-gradient(700px 400px at 30% 20%, rgba(255,79,216,.18), transparent 60%),
+        radial-gradient(700px 400px at 70% 20%, rgba(177,76,255,.16), transparent 60%),
+        var(--bg);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
     }
 
-    /* main card */
+    /* === MAIN CARD === */
     .card{
-      position:relative;
-      width:100%;
-      background: linear-gradient(135deg, rgba(255,79,216,.14), rgba(177,76,255,.10)) , var(--panel);
-      border: 1px solid rgba(255,255,255,.12);
+      width: min(420px, 92vw);          /* 🔥 FELE AKKORA */
+      background: var(--panel);
+      border:1px solid rgba(255,255,255,.12);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-      overflow:hidden;
+      padding: 12px;                    /* 🔥 FELE PADDING */
     }
 
-    .card-inner{
-      padding: 14px 14px 12px; /* ✅ KISEBB */
-    }
-
-    /* top small brand */
+    /* header */
     .brand{
       display:flex;
       align-items:center;
-      gap:10px;
-      font-weight: 800;
-      letter-spacing:.2px;
-      color: rgba(255,255,255,.88);
-      font-size: 13px;
-      margin-bottom: 8px; /* kisebb */
+      gap:8px;
+      font-weight:800;
+      font-size:13px;
+      margin-bottom:6px;
     }
     .dot{
-      width:10px;height:10px;border-radius:999px;
+      width:8px;height:8px;border-radius:50%;
       background: radial-gradient(circle at 30% 30%, #ffd0f6, var(--pink));
-      box-shadow: 0 0 18px rgba(255,79,216,.6);
-      flex:0 0 auto;
+      box-shadow:0 0 10px rgba(255,79,216,.6);
     }
 
     h1{
-      margin: 4px 0 6px; /* kisebb margó */
-      font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
-      font-weight: 700;
-      letter-spacing: -0.6px;
-      line-height: 1.06;
-      font-size: clamp(26px, 3.0vw, 38px); /* ✅ KISEBB */
-      text-shadow: 0 10px 40px rgba(0,0,0,.45);
+      margin:2px 0 6px;
+      font-size:22px;                   /* 🔥 KISEBB */
+      line-height:1.05;
+      letter-spacing:-.4px;
+      font-family: Georgia, serif;
     }
 
-    .lead{
-      margin: 0 0 10px; /* ✅ KISEBB */
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.42;
-      max-width: 68ch;
+    .sub{
+      margin:0 0 10px;
+      font-size:13px;
+      color:var(--muted);
     }
 
-    /* compact language cards */
-    .lang-list{
+    /* === LANGUAGE ROWS === */
+    .list{
       display:grid;
-      gap: 10px;
-      margin-top: 4px;
+      gap:8px;                          /* 🔥 KISEBB GAP */
     }
 
-    .lang-card{
-      background: var(--panel2);
-      border: 1px solid rgba(255,255,255,.11);
-      border-radius: 14px;
-      padding: 9px 12px; /* ✅ KISEBB */
+    .lang{
       display:flex;
       align-items:center;
-      justify-content: space-between;
-      gap: 12px;
-      box-shadow: 0 14px 40px rgba(0,0,0,.22);
-      transition: transform .14s ease, border-color .14s ease, background .14s ease;
+      justify-content:space-between;
+      padding:8px 10px;                 /* 🔥 FELE */
+      background: var(--panel2);
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      transition:.15s;
     }
-    .lang-card:hover{
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,.18);
-      background: rgba(255,255,255,.05);
+    .lang:hover{
+      transform:translateY(-1px);
+      border-color:rgba(255,255,255,.18);
     }
 
-    .lang-text{
+    .txt{
       display:flex;
       flex-direction:column;
-      gap: 2px;
-      min-width: 0;
+      gap:2px;
     }
-    .lang-title{
-      font-weight: 800;
-      font-size: 16px;
-      line-height: 1.1;
-      margin:0;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
+    .title{
+      font-size:15px;
+      font-weight:800;
+      line-height:1.1;
     }
-    .lang-sub{
-      margin:0;
-      font-size: 13px;
-      line-height: 1.15;
-      color: rgba(255,255,255,.74);
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
+    .desc{
+      font-size:12px;
+      line-height:1.1;
+      color:var(--muted);
     }
 
     .badge{
-      width: 34px;
-      height: 34px;
-      border-radius: 999px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight: 900;
-      font-size: 12px;
-      color: #120613;
+      width:30px;height:30px;           /* 🔥 KISEBB */
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      font-size:11px;
+      font-weight:900;
+      color:#120613;
       background: linear-gradient(135deg, var(--pink), var(--pink2));
-      border: 1px solid rgba(255,255,255,.14);
-      box-shadow: 0 16px 36px rgba(255,79,216,.20);
-      flex:0 0 auto;
     }
 
-    /* footer strip inside card */
-    .card-footer{
-      margin-top: 10px;
-      padding-top: 9px;
-      border-top: 1px solid rgba(255,255,255,.08);
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
-      gap: 10px;
-      color: rgba(255,255,255,.60);
-      font-size: 12.5px;
-      flex-wrap: wrap;
-    }
-
-    /* ensure no bottom-right hint */
-    .hint{ display:none !important; }
-
-    /* responsive */
-    @media (max-width: 520px){
-      .card-inner{ padding: 13px 12px 11px; }
-      .lang-card{ padding: 9px 11px; }
-      .badge{ width: 32px; height: 32px; }
+    /* footer */
+    .foot{
+      margin-top:8px;
+      padding-top:6px;
+      border-top:1px solid rgba(255,255,255,.08);
+      font-size:11.5px;
+      color:rgba(255,255,255,.55);
+      text-align:center;
     }
   </style>
 </head>
 
 <body>
-  <main class="page">
-    <div class="halo">
-      <section class="card" aria-label="Nyelvválasztó">
-        <div class="card-inner">
-          <div class="brand">
-            <span class="dot" aria-hidden="true"></span>
-            <span>Fitness Lady</span>
-          </div>
-
-          <h1>Válassz nyelvet</h1>
-          <p class="lead">Válaszd ki a kívánt nyelvet.</p>
-
-          <div class="lang-list">
-            <!-- HU card: ONLY Hungarian text -->
-            <a class="lang-card" href="/hu/" aria-label="Magyar oldal">
-              <div class="lang-text">
-                <div class="lang-title">Magyar</div>
-                <div class="lang-sub">Női edzésprogramok</div>
-              </div>
-              <div class="badge" aria-hidden="true">HU</div>
-            </a>
-
-            <!-- DE card: ONLY German text -->
-            <a class="lang-card" href="/de/" aria-label="Deutsche Seite">
-              <div class="lang-text">
-                <div class="lang-title">Deutsch</div>
-                <div class="lang-sub">Trainingsprogramme für Frauen</div>
-              </div>
-              <div class="badge" aria-hidden="true">DE</div>
-            </a>
-          </div>
-
-          <div class="card-footer">
-            <div>© <span id="y"></span> Fitness Lady</div>
-            <div class="hint">Nyelv váltás a fejlécben is</div>
-          </div>
-        </div>
-      </section>
+  <section class="card">
+    <div class="brand">
+      <span class="dot"></span>
+      <span>Fitness Lady</span>
     </div>
-  </main>
+
+    <h1>Válassz nyelvet</h1>
+    <p class="sub">Válaszd ki a kívánt nyelvet.</p>
+
+    <div class="list">
+      <a class="lang" href="/hu/">
+        <div class="txt">
+          <div class="title">Magyar</div>
+          <div class="desc">Női edzésprogramok</div>
+        </div>
+        <div class="badge">HU</div>
+      </a>
+
+      <a class="lang" href="/de/">
+        <div class="txt">
+          <div class="title">Deutsch</div>
+          <div class="desc">Trainingsprogramme für Frauen</div>
+        </div>
+        <div class="badge">DE</div>
+      </a>
+    </div>
+
+    <div class="foot">
+      © <span id="y"></span> Fitness Lady
+    </div>
+  </section>
 
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
+
