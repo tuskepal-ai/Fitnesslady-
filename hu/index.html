@@ -9,8 +9,8 @@
   <style>
     :root{
       --bg: #07060b;
-      --panel: rgba(20, 12, 26, .62);
-      --panel2: rgba(20, 12, 26, .45);
+      --panel: rgba(20, 12, 26, .46);   /* átlátszóbb */
+      --panel2: rgba(20, 12, 26, .34);  /* átlátszóbb */
       --stroke: rgba(255,255,255,.10);
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.70);
@@ -26,6 +26,21 @@
       --bg-x: 86%;
       --bg-y: 14%;
       --bg-zoom: 0.92;
+
+      /* prémium bal oldali "gutter" */
+      --left-gutter: 48px;
+
+      /* arany hover keret */
+      --gold1: rgba(255, 214, 120, .00);
+      --gold2: rgba(255, 214, 120, .55);
+      --gold3: rgba(255, 236, 190, .12);
+    }
+
+    @media (max-width: 1200px){
+      :root{ --left-gutter: 24px; }
+    }
+    @media (max-width: 768px){
+      :root{ --left-gutter: 14px; }
     }
 
     *{ box-sizing:border-box; }
@@ -85,11 +100,10 @@
       border-bottom: 1px solid rgba(255,255,255,.06);
     }
 
-    /* ====== BALRA IGAZÍTÁS (KÉRT JAVÍTÁS) ====== */
     .topbar-inner{
       max-width: var(--max);
-      margin: 0;                 /* nem középre */
-      padding-left: 14px;        /* azonos oldalpaddel */
+      margin-left: var(--left-gutter);
+      margin-right: 0;
       padding-right: 14px;
       display:flex;
       align-items:center;
@@ -129,6 +143,27 @@
       white-space: nowrap;
     }
 
+    .afszt-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .3px;
+      color: var(--text);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(10px);
+      transition: all .18s ease;
+      white-space: nowrap;
+    }
+    .afszt-btn:hover{
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.25);
+    }
+
     .menu-btn{
       width: 40px; height: 40px; border-radius: 999px;
       background: rgba(255,255,255,.06);
@@ -145,17 +180,15 @@
       min-height: 88vh;
       display:flex;
       align-items: stretch;
-
-      /* ====== BALRA IGAZÍTÁS (KÉRT JAVÍTÁS) ====== */
-      justify-content: flex-start; /* ne középre */
+      justify-content: flex-start;
     }
 
-    /* ====== BALRA IGAZÍTÁS (KÉRT JAVÍTÁS) ====== */
     .wrap{
       position: relative;
       width: 100%;
       max-width: var(--max);
-      margin: 0;                 /* nem középre */
+      margin-left: var(--left-gutter);
+      margin-right: 0;
       padding: 34px 14px 50px;
     }
 
@@ -246,6 +279,103 @@
       backdrop-filter: blur(10px);
     }
 
+    /* ===== PRÉMIUM ARANY HOVER KERET (KÁRTYÁKRA) ===== */
+    .card, .pkg{
+      position: relative;
+      isolation: isolate; /* biztosan a keret a kártya felett legyen */
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    /* halványabb üveg */
+    .card{
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      overflow:hidden;
+    }
+    .pkg{
+      background: var(--panel2);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      padding: 18px;
+      overflow:hidden;
+    }
+
+    /* a meglévő glow marad */
+    .card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(700px 220px at 10% 0%, rgba(255,79,216,.22), transparent 55%),
+                  radial-gradient(700px 260px at 90% 20%, rgba(177,76,255,.18), transparent 60%);
+      opacity:.75;
+      pointer-events:none;
+      z-index: 0;
+    }
+    .pkg::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(800px 260px at 15% 0%, rgba(255,79,216,.18), transparent 55%),
+                  radial-gradient(700px 260px at 85% 15%, rgba(177,76,255,.14), transparent 60%);
+      opacity:.8;
+      pointer-events:none;
+      z-index: 0;
+    }
+
+    /* ARANY “FUTÓ” KERET: csak hoveren látszik */
+    .card::after, .pkg::after{
+      content:"";
+      position:absolute;
+      inset: -2px;                 /* picit kifelé */
+      border-radius: calc(var(--radius) + 2px);
+      padding: 2px;                /* keret vastagság */
+      pointer-events:none;
+      opacity: 0;
+      z-index: 2;
+
+      /* arany fénycsík conic-gradienttel */
+      background: conic-gradient(
+        from 180deg,
+        var(--gold1),
+        var(--gold2),
+        var(--gold3),
+        var(--gold1),
+        var(--gold2),
+        var(--gold1)
+      );
+
+      /* csak a keretet mutatjuk (közép átlátszó) */
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+
+      filter: blur(.15px);
+      transform: translateZ(0);
+      animation: gold-run 1.6s linear infinite;
+    }
+
+    @keyframes gold-run{
+      to{ transform: rotate(360deg); }
+    }
+
+    .card:hover, .pkg:hover{
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.14);
+      background: rgba(20,12,26,.40); /* picit “tisztább” hoveren */
+    }
+
+    .card:hover::after, .pkg:hover::after{
+      opacity: 1;
+    }
+
+    /* belső tartalom mindig a glow felett legyen */
+    .card-inner, .pkg-inner{ position:relative; z-index: 1; }
+
     /* ---------- “Mit kapsz pontosan?” cards a hero alatt ---------- */
     .hero-cards{
       margin-top: 18px;
@@ -253,24 +383,7 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 14px;
     }
-    .card{
-      background: var(--panel);
-      border: 1px solid var(--stroke);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      overflow:hidden;
-      position: relative;
-    }
-    .card::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(700px 220px at 10% 0%, rgba(255,79,216,.22), transparent 55%),
-                  radial-gradient(700px 260px at 90% 20%, rgba(177,76,255,.18), transparent 60%);
-      opacity:.8;
-      pointer-events:none;
-    }
-    .card-inner{ position:relative; padding: 16px; }
+    .card-inner{ padding: 16px; }
     .card h3{ margin:0 0 8px; font-size: 14px; letter-spacing: .2px; }
     .card p{ margin:0; color: var(--muted); font-size: 12.8px; line-height: 1.5; }
 
@@ -290,14 +403,12 @@
       position: relative;
       padding: 52px 0;
     }
-
-    /* ====== BALRA IGAZÍTÁS (KÉRT JAVÍTÁS) ====== */
     .container{
       max-width: var(--max);
       padding: 0 14px;
-      margin: 0;                /* nem középre */
+      margin-left: var(--left-gutter);
+      margin-right: 0;
     }
-
     .section-title{
       font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
       font-size: 34px;
@@ -317,25 +428,6 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
     }
-    .pkg{
-      background: var(--panel2);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      padding: 18px;
-      position: relative;
-      overflow:hidden;
-    }
-    .pkg::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(800px 260px at 15% 0%, rgba(255,79,216,.18), transparent 55%),
-                  radial-gradient(700px 260px at 85% 15%, rgba(177,76,255,.14), transparent 60%);
-      opacity:.9;
-      pointer-events:none;
-    }
-    .pkg-inner{ position:relative; }
     .pkg-top{
       display:flex; align-items:center; justify-content:space-between; gap:10px;
       margin-bottom: 10px;
@@ -402,11 +494,10 @@
       background: rgba(10,8,14,.55);
       backdrop-filter: blur(10px);
     }
-
-    /* ====== BALRA IGAZÍTÁS (KÉRT JAVÍTÁS) ====== */
     .footer-inner{
       max-width: var(--max);
-      margin: 0;               /* nem középre */
+      margin-left: var(--left-gutter);
+      margin-right: 0;
       padding: 0 14px;
       display:flex;
       align-items:center;
@@ -441,6 +532,12 @@
       background: radial-gradient(900px 70px at 50% 0%, rgba(255,79,216,.22), transparent 65%);
       opacity: .9;
     }
+
+    /* mozgáscsökkentés tiszteletben tartása */
+    @media (prefers-reduced-motion: reduce){
+      .card::after, .pkg::after{ animation: none; }
+      .card:hover, .pkg:hover{ transform:none; }
+    }
   </style>
 </head>
 
@@ -463,9 +560,12 @@
       </nav>
 
       <div style="display:flex; align-items:center; gap:10px;">
+        <a class="afszt-btn" href="#afsz">AFSZ</a>
+
         <button class="menu-btn" id="menuBtn" aria-label="Menü">
           ☰
         </button>
+
         <a class="cta-pill" href="#kapcsolat">Ingyenes konzultáció</a>
       </div>
     </div>
@@ -694,6 +794,21 @@
     </div>
   </section>
 
+  <!-- AFSZ szekció (ide jön majd a tartalom) -->
+  <section id="afsz">
+    <div class="container">
+      <div class="section-title">AFSZ</div>
+      <p class="section-sub">Ide jöhet az AFSZ tartalom / dokumentum / szabályzat.</p>
+      <div class="pkg">
+        <div class="pkg-inner">
+          <p style="margin:0; color:var(--muted); line-height:1.6;">
+            (Placeholder) Később: letölthető PDF, rövid összefoglaló, vagy “slide-in” panel.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <footer class="footer-strip">
     <div class="footer-inner">
       <div>© <span id="y"></span> Fitness Lady</div>
@@ -727,6 +842,7 @@
           <a href="#csomagok" style="display:block; padding:10px 10px; color:rgba(255,255,255,.86)">Csomagok</a>
           <a href="#hogyan" style="display:block; padding:10px 10px; color:rgba(255,255,255,.86)">Hogyan működik?</a>
           <a href="#velemenyek" style="display:block; padding:10px 10px; color:rgba(255,255,255,.86)">Vélemények</a>
+          <a href="#afsz" style="display:block; padding:10px 10px; color:rgba(255,255,255,.86)">AFSZ</a>
         `;
         document.body.appendChild(nav);
       } else {
