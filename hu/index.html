@@ -3,302 +3,262 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Fitness Lady – Női edzéstervek</title>
-  <meta name="description" content="Női edzéstervek, táplálkozási rendszer, finomhangolás – prémium, tartós eredmény." />
+  <title>Fitness Lady — Női edzésterv</title>
 
   <style>
     :root{
-      --bg:#07000a;
+      --bg:#07060b;
       --card: rgba(255,255,255,.06);
       --card2: rgba(255,255,255,.08);
-      --border: rgba(255,255,255,.10);
+      --stroke: rgba(255,255,255,.10);
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.70);
-      --brand1:#ff4fd8;
-      --brand2:#a84cff;
-      --shadow: 0 18px 45px rgba(0,0,0,.55);
-      --r: 22px;
+      --muted2: rgba(255,255,255,.55);
+      --brand: #ff4fd8;
+      --brand2:#b84bff;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --r: 18px;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
+
+    *{ box-sizing:border-box; }
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 700px at 65% 10%, rgba(255,79,216,.28), transparent 55%),
-        radial-gradient(900px 600px at 20% 20%, rgba(168,76,255,.22), transparent 50%),
-        radial-gradient(900px 700px at 80% 90%, rgba(255,79,216,.10), transparent 50%),
-        var(--bg);
-      overflow-x:hidden;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: radial-gradient(1200px 900px at 30% 10%, rgba(255,79,216,.30), transparent 60%),
+                  radial-gradient(900px 700px at 70% 30%, rgba(184,75,255,.22), transparent 55%),
+                  linear-gradient(180deg, #090611 0%, #06050a 100%);
+      color: var(--text);
+      min-height: 100vh;
     }
 
-    a{color:inherit}
-    .container{max-width:1120px;margin:0 auto;padding:0 18px}
+    a{ color:inherit; text-decoration:none; }
+    .wrap{ width:min(1120px, 92vw); margin:0 auto; padding: 18px 0 90px; }
 
-    /* TOPBAR */
+    /* top */
     .topbar{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter: blur(14px);
-      background: rgba(7,0,10,.55);
+      position: sticky; top:0; z-index:30;
+      backdrop-filter: blur(10px);
+      background: rgba(0,0,0,.25);
       border-bottom: 1px solid rgba(255,255,255,.06);
     }
-    .topbar-inner{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 0;
-      gap:14px;
+    .topbar .inner{
+      width:min(1120px, 92vw);
+      margin:0 auto;
+      padding: 14px 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
     }
     .brand{
-      display:flex; align-items:center; gap:10px; font-weight:800;
+      display:flex; align-items:center; gap:10px;
+      font-weight:800;
       letter-spacing:.2px;
     }
-    .brand-dot{
-      width:10px;height:10px;border-radius:999px;
-      background: radial-gradient(circle, #ffd1f6, var(--brand1) 45%, var(--brand2) 100%);
-      box-shadow: 0 0 18px rgba(255,79,216,.55);
+    .dot{
+      width:10px;height:10px;border-radius:99px;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--brand) 40%, transparent 70%),
+                  linear-gradient(90deg, var(--brand), var(--brand2));
+      box-shadow: 0 0 22px rgba(255,79,216,.55);
     }
-    nav{
-      display:flex; align-items:center; gap:16px;
-      color: var(--muted);
-      font-weight:600;
+    nav{ display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+    nav a{
       font-size:14px;
+      color: var(--muted);
+      padding:8px 10px;
+      border-radius: 12px;
     }
-    nav a{ text-decoration:none; opacity:.9 }
-    nav a:hover{ opacity:1; color:#fff }
+    nav a:hover{ background: rgba(255,255,255,.06); color: var(--text); }
 
+    .cta{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    }
     .pill{
       display:inline-flex; align-items:center; justify-content:center;
-      padding:10px 16px;
-      border-radius:999px;
-      font-weight:800;
-      text-decoration:none;
+      padding:10px 14px;
+      border-radius: 999px;
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.06);
-      color:#fff;
+      color: var(--text);
+      font-weight:700;
+      font-size:14px;
+      cursor:pointer;
+      transition: transform .08s ease, background .15s ease;
+      user-select:none;
     }
+    .pill:hover{ background: rgba(255,255,255,.09); }
+    .pill:active{ transform: translateY(1px); }
+
     .pill.primary{
-      border:none;
-      color:#120013;
-      background: linear-gradient(135deg, var(--brand1), var(--brand2));
-      box-shadow: 0 12px 30px rgba(255,79,216,.22);
+      border: none;
+      background: linear-gradient(90deg, var(--brand), var(--brand2));
+      box-shadow: 0 10px 34px rgba(255,79,216,.18);
     }
 
-    /* HERO */
+    /* hero */
     .hero{
-      padding:40px 0 10px;
-    }
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap:22px;
-      align-items:stretch;
-    }
-    @media (max-width: 900px){
-      .hero-grid{grid-template-columns:1fr}
-      nav{display:none}
-    }
-
-    .hero-card{
-      position:relative;
-      border-radius: var(--r);
+      margin-top: 22px;
+      border-radius: calc(var(--r) + 10px);
       overflow:hidden;
-      background: rgba(255,255,255,.03);
       border: 1px solid rgba(255,255,255,.08);
       box-shadow: var(--shadow);
-      min-height: 360px;
-    }
-    .hero-card .bg{
-      position:absolute; inset:0;
       background:
-        linear-gradient(180deg, rgba(0,0,0,.20), rgba(0,0,0,.65)),
-        url("../hero.png");
-      background-size:cover;
-      background-position:center;
-      filter: saturate(1.05) contrast(1.05);
+        radial-gradient(900px 600px at 20% 10%, rgba(255,79,216,.25), transparent 55%),
+        radial-gradient(700px 520px at 80% 35%, rgba(184,75,255,.20), transparent 55%),
+        rgba(255,255,255,.04);
     }
-    .hero-card .content{
-      position:relative;
-      padding:34px 26px;
-    }
-    .kicker{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.10);
-      color: rgba(255,255,255,.80);
-      font-weight:700;
-      font-size:13px;
-    }
-    h1{
-      margin:16px 0 10px;
-      font-size:52px;
-      line-height:1.02;
-      letter-spacing:-.8px;
-    }
-    @media (max-width: 520px){
-      h1{font-size:40px}
-    }
-    .sub{
-      color: rgba(255,255,255,.78);
-      font-size:16px;
-      max-width: 58ch;
-      line-height:1.55;
-    }
-    .hero-actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:18px;
-    }
-
-    .side-card{
-      border-radius: var(--r);
-      background: linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow: var(--shadow);
-      padding:22px;
-      min-height: 360px;
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-    .mini-title{
-      font-weight:900;
-      font-size:16px;
-      letter-spacing:.2px;
-    }
-    .mini-grid{
+    .hero-inner{
+      padding: 28px 22px;
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-      margin-top:6px;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      align-items:center;
     }
-    .mini{
-      border-radius: 16px;
-      padding:14px;
-      background: rgba(0,0,0,.25);
-      border:1px solid rgba(255,255,255,.08);
+    .hero h1{
+      margin:0;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height:1.05;
+      letter-spacing:-.5px;
     }
-    .mini b{display:block;margin-bottom:6px}
-    .mini span{color:var(--muted); font-size:13px; line-height:1.35}
+    .hero p{
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 60ch;
+    }
+    .hero-actions{ margin-top: 14px; display:flex; gap:10px; flex-wrap:wrap; }
+    .hero-img{
+      display:flex;
+      justify-content:flex-end;
+    }
+    .hero-img img{
+      width:min(360px, 100%);
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      opacity:.92;
+    }
 
-    /* SECTIONS */
-    .section{padding:42px 0}
-    .section h2{margin:0 0 8px; font-size:34px; letter-spacing:-.4px}
-    .section p.lead{margin:0 0 18px; color:var(--muted); max-width:70ch; line-height:1.55}
+    @media (max-width: 860px){
+      .hero-inner{ grid-template-columns: 1fr; }
+      .hero-img{ justify-content:flex-start; }
+    }
 
-    /* PACKAGES */
-    .cards{
+    /* section */
+    section{ margin-top: 34px; }
+    .section-title{
+      font-size: 30px;
+      margin: 0 0 10px;
+      letter-spacing:-.3px;
+    }
+    .section-sub{ margin:0 0 16px; color: var(--muted); }
+
+    .grid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
-      gap:16px;
+      gap: 14px;
     }
-    @media (max-width: 980px){ .cards{grid-template-columns:1fr 1fr} }
-    @media (max-width: 640px){ .cards{grid-template-columns:1fr} }
+    @media (max-width: 900px){ .grid{ grid-template-columns: 1fr; } }
 
     .card{
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.05);
       border-radius: var(--r);
-      padding:18px;
-      background: linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow: 0 14px 34px rgba(0,0,0,.42);
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+      padding: 16px;
     }
-    .card .badge{
-      display:inline-flex;
-      padding:6px 10px;
-      border-radius:999px;
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.10);
-      color: rgba(255,255,255,.85);
-      font-size:12px;
-      font-weight:800;
-      margin-bottom:12px;
-    }
-    .card h3{margin:0 0 8px; font-size:22px}
-    .card ul{margin:10px 0 0; padding:0 0 0 18px; color:var(--muted); line-height:1.55}
-    .card .price{
-      margin-top:14px;
-      display:flex;
-      align-items:baseline;
-      gap:8px;
-      font-weight:900;
-    }
-    .card .price small{color:var(--muted); font-weight:700}
-    .card .btn{
-      margin-top:14px;
-      width:100%;
-      display:inline-flex;
-      justify-content:center;
-      text-decoration:none;
-      padding:12px 14px;
-      border-radius:999px;
-      font-weight:900;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-    }
+    .card h3{ margin:0 0 8px; font-size: 18px; }
+    .card ul{ margin:0; padding-left: 18px; color: var(--muted); }
+    .card li{ margin: 6px 0; }
 
-    /* REVIEWS */
-    .reviews-wrap{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:16px;
-    }
+    /* reviews */
     .reviews-head{
       display:flex;
       align-items:flex-end;
       justify-content:space-between;
       gap:14px;
       flex-wrap:wrap;
+      margin-bottom: 10px;
     }
-    .reviews-actions{
-      display:flex; gap:10px; flex-wrap:wrap;
+    .reviews-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+    .reviews-shell{
+      border: 1px dashed rgba(255,255,255,.16);
+      background: rgba(255,255,255,.03);
+      border-radius: var(--r);
+      padding: 14px;
     }
-    .reviews-list{
+
+    .reviews-grid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
-      gap:16px;
+      gap: 12px;
+      margin-top: 12px;
     }
-    @media (max-width: 980px){ .reviews-list{grid-template-columns:1fr 1fr} }
-    @media (max-width: 640px){ .reviews-list{grid-template-columns:1fr} }
+    @media (max-width: 980px){ .reviews-grid{ grid-template-columns: 1fr; } }
 
-    .review{
+    .review-card{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
       border-radius: var(--r);
-      padding:18px;
-      background: linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow: 0 14px 34px rgba(0,0,0,.42);
+      padding: 14px;
     }
-    .stars{color:#ffb4f1; font-size:18px; letter-spacing:1px}
-    .review .txt{margin-top:10px; color:rgba(255,255,255,.92); line-height:1.55; white-space:pre-wrap}
-    .review .meta{margin-top:12px; color:var(--muted); font-size:12px}
+    .review-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 8px;
+    }
+    .stars{
+      font-size: 14px;
+      letter-spacing: 1px;
+      white-space:nowrap;
+      color: rgba(255,255,255,.85);
+    }
+    .meta{
+      font-size: 12px;
+      color: var(--muted2);
+      white-space:nowrap;
+    }
+    .review-text{
+      margin:0;
+      color: var(--text);
+      line-height:1.35;
+      font-size: 14px;
+      word-break: break-word;
+    }
 
-    /* CONTACT */
-    .contact{
-      border-radius: var(--r);
-      padding:22px;
+    .reviews-status{
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
+      color: var(--muted);
+      font-size: 13px;
     }
 
+    /* footer */
     footer{
-      padding:26px 0 40px;
+      margin-top: 40px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,.08);
       color: rgba(255,255,255,.55);
-      font-size:13px;
-      border-top:1px solid rgba(255,255,255,.06);
-      margin-top:30px;
     }
   </style>
 </head>
 
 <body>
-  <!-- TOPBAR -->
   <div class="topbar">
-    <div class="container topbar-inner">
+    <div class="inner">
       <div class="brand">
-        <span class="brand-dot"></span>
+        <span class="dot"></span>
         <span>Fitness Lady</span>
       </div>
 
@@ -306,114 +266,71 @@
         <a href="#csomagok">Csomagok</a>
         <a href="#hogyan">Hogyan működik?</a>
         <a href="#velemenyek">Vélemények</a>
-        <a href="#kontakt">Kapcsolat</a>
+        <a href="#kapcsolat">Kapcsolat</a>
       </nav>
 
-      <a class="pill primary" href="#kontakt">Ingyenes konzultáció</a>
+      <div class="cta">
+        <a class="pill primary" href="#kapcsolat">Ingyenes konzultáció</a>
+      </div>
     </div>
   </div>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="container hero-grid">
-      <div class="hero-card">
-        <div class="bg" aria-hidden="true"></div>
-        <div class="content">
-          <div class="kicker">Nem sablon. Nem kompromisszum.</div>
-          <h1>Edzéstervek nőknek, amiket tényleg lehet tartani.</h1>
-          <div class="sub">
-            Női edzésterv formához, erőhöz, jobb közérzethez — neked, az időbeosztásodhoz igazítva.
-          </div>
-
+  <div class="wrap">
+    <div class="hero">
+      <div class="hero-inner">
+        <div>
+          <h1>Edzésterv, amit tényleg lehet tartani.</h1>
+          <p>Nem sablon. Nem kompromisszum. Női edzésterv formához, erőhöz, jobb közérzethez — neked, az időbeosztásodhoz igazítva.</p>
           <div class="hero-actions">
             <a class="pill primary" href="#csomagok">Csomagok</a>
             <a class="pill" href="https://tally.so/r/LZpRXG" target="_blank" rel="noopener">Írj véleményt</a>
           </div>
         </div>
-      </div>
-
-      <div class="side-card">
-        <div class="mini-title">Mit kapsz pontosan?</div>
-        <div class="mini-grid">
-          <div class="mini">
-            <b>Edzés</b>
-            <span>Heti terv + progresszió. Rövid, tartósan tartható struktúra.</span>
-          </div>
-          <div class="mini">
-            <b>Táplálkozás</b>
-            <span>Egyszerű rendszer, ami illik a napjaidhoz — nem fordítva.</span>
-          </div>
-          <div class="mini">
-            <b>Kapcsolat</b>
-            <span>Visszajelzés, finomhangolás, támogatás.</span>
-          </div>
-          <div class="mini">
-            <b>Fókusz</b>
-            <span>Formálódás + erő + közérzet — célhoz igazítva.</span>
-          </div>
+        <div class="hero-img">
+          <img src="/hero.png" alt="Fitness Lady" />
         </div>
-
-        <a class="pill primary" href="https://tally.so/r/LZpRXG" target="_blank" rel="noopener">Írj véleményt</a>
-        <a class="pill" href="#velemenyek">Nézd meg a véleményeket</a>
       </div>
     </div>
-  </div>
 
-  <!-- CSOMAGOK -->
-  <section id="csomagok" class="section">
-    <div class="container">
-      <h2>Csomagok</h2>
-      <p class="lead">Válassz a célod és időbeosztásod alapján. Prémium érzet, tiszta struktúra, stabil rendszer.</p>
+    <section id="csomagok">
+      <h2 class="section-title">Csomagok</h2>
+      <p class="section-sub">Válassz a célod és időbeosztásod alapján. Prémium érzet, tiszta struktúra, stabil rendszer.</p>
 
-      <div class="cards">
+      <div class="grid">
         <div class="card">
-          <div class="badge">Start</div>
           <h3>Alap csomag</h3>
           <ul>
             <li>Személyre szabott edzésterv</li>
-            <li>Alap progresszió és útmutató</li>
+            <li>Alap progresszió</li>
             <li>Egyszerű, tartható struktúra</li>
           </ul>
-          <div class="price">CHF — <small>(árat később írjuk be)</small></div>
-          <a class="btn" href="#kontakt">Érdekel</a>
         </div>
 
         <div class="card">
-          <div class="badge">Balance • Legnépszerűbb</div>
           <h3>Edzés + táplálkozás</h3>
           <ul>
             <li>Edzésterv + táplálkozási rendszer</li>
             <li>Rendszeres finomhangolás</li>
             <li>Stabil energiák, jobb közérzet</li>
           </ul>
-          <div class="price">CHF — <small>(árat később írjuk be)</small></div>
-          <a class="btn" href="#kontakt">Érdekel</a>
         </div>
 
         <div class="card">
-          <div class="badge">Pro</div>
           <h3>Maximális támogatás</h3>
           <ul>
             <li>Teljes személyre szabás</li>
             <li>Gyakori visszajelzés / követés</li>
             <li>Formálódás + erő fókusz</li>
           </ul>
-          <div class="price">CHF — <small>(árat később írjuk be)</small></div>
-          <a class="btn" href="#kontakt">Érdekel</a>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- HOGYAN -->
-  <section id="hogyan" class="section">
-    <div class="container">
-      <h2>Hogyan működik?</h2>
-      <p class="lead">
-        1) Konzultáció → 2) Terv → 3) Követés és finomhangolás.  
-        Nem túlterhelés, hanem tartható rendszer.
-      </p>
-      <div class="cards">
+    <section id="hogyan">
+      <h2 class="section-title">Hogyan működik?</h2>
+      <p class="section-sub">1) Konzultáció → 2) Terv → 3) Követés és finomhangolás. Nem túltolás, hanem fenntartható rendszer.</p>
+
+      <div class="grid">
         <div class="card">
           <h3>1. Cél + állapot</h3>
           <ul>
@@ -436,58 +353,147 @@
           </ul>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- VÉLEMÉNYEK -->
-  <section id="velemenyek" class="section">
-    <div class="container reviews-wrap">
+    <section id="velemenyek">
       <div class="reviews-head">
         <div>
-          <h2>Vélemények</h2>
-          <p class="lead">
-            Véleményt írni itt tudsz (Tally). Csak a jóváhagyott („igen”) vélemények jelennek meg automatikusan.
-          </p>
+          <h2 class="section-title">Vélemények</h2>
+          <p class="section-sub" style="margin-bottom:0">Csak a jóváhagyott („igen”) vélemények jelennek meg.</p>
         </div>
+
         <div class="reviews-actions">
           <a class="pill primary" href="https://tally.so/r/LZpRXG" target="_blank" rel="noopener">Írj véleményt</a>
-          <button class="pill" id="refreshBtn" type="button">Frissítés</button>
+          <button class="pill" id="btnRefresh" type="button">Frissítés</button>
         </div>
       </div>
 
-      <div id="reviewsList" class="reviews-list"></div>
-    </div>
-  </section>
+      <div class="reviews-shell">
+        <div class="badge" id="reviewsBadge">⏳ Betöltés…</div>
 
-  <!-- KAPCSOLAT -->
-  <section id="kontakt" class="section">
-    <div class="container">
-      <h2>Kapcsolat</h2>
-      <p class="lead">Ide jöhet a kapcsolat form / időpontfoglalás / WhatsApp gomb.</p>
+        <div class="reviews-grid" id="reviewsGrid" aria-live="polite"></div>
 
-      <div class="contact">
-        <b>Ingyenes konzultáció</b>
-        <p style="margin:8px 0 0; color: var(--muted);">
-          Írj üzenetet és megbeszéljük a célokat, a kereteket, és hogy melyik csomag illik hozzád.
-        </p>
+        <div class="reviews-status" id="reviewsStatus"></div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <footer>
-    <div class="container">© 2026 Fitness Lady</div>
-  </footer>
+    <section id="kapcsolat">
+      <h2 class="section-title">Kapcsolat</h2>
+      <p class="section-sub">Ide jöhet a kapcsolat form / időpontfoglalás / WhatsApp gomb.</p>
+      <div class="card">
+        <h3>Ingyenes konzultáció</h3>
+        <p style="margin:0;color:var(--muted)">Írj üzenetet és megbeszéljük a célokat, a kereteket, és hogy melyik csomag illik hozzád.</p>
+      </div>
+    </section>
+
+    <footer>
+      © 2026 Fitness Lady
+    </footer>
+  </div>
 
   <script>
-    // ✅ A TE PUBLIKUS CSV LINKED (Publish to web -> CSV)
-    const SHEET_CSV_URL =
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIH-tTccqy_yetPGUaqZ3wULe74ZVSzCX6wA7kZV-iWDuOlI4_IBjTFggNS2xpZFqQwTXj3mnZeag/pub?gid=0&single=true&output=csv";
+    // ====== BEÁLLÍTÁSOK ======
+    const TALLY_URL = "https://tally.so/r/LZpRXG";
 
-    const reviewsList = document.getElementById("reviewsList");
-    const refreshBtn = document.getElementById("refreshBtn");
+    // ✅ A TE CSV LINKED:
+    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSlH-tTccqy_yetPGUaqZ3wULe74ZVSzCX6wA7kZV-iWDu0l1I4_IBjTFggNS2xpZFqQwTXj3mnZeag/pub?gid=0&single=true&output=csv";
 
-    function escapeHtml(s) {
-      return String(s ?? "")
+    // Oszlopnevek (a Google Sheet fejléce alapján)
+    const COL_TEXT = "Véleményed";
+    const COL_APPROVED = "Megjelenhet?";
+    const COL_RATING = "Mennyire"; // ha nincs, akkor nem baj
+    const APPROVED_VALUE = "igen";
+
+    // ====== CSV PARSER (egyszerű, de kezeli az idézőjeles mezőket is) ======
+    function parseCSV(text){
+      const rows = [];
+      let row = [];
+      let cur = "";
+      let inQuotes = false;
+
+      for (let i=0; i<text.length; i++){
+        const c = text[i];
+        const next = text[i+1];
+
+        if (c === '"' ){
+          if (inQuotes && next === '"'){ cur += '"'; i++; }
+          else { inQuotes = !inQuotes; }
+          continue;
+        }
+
+        if (!inQuotes && c === ","){
+          row.push(cur);
+          cur = "";
+          continue;
+        }
+
+        if (!inQuotes && (c === "\n")){
+          row.push(cur);
+          rows.push(row);
+          row = [];
+          cur = "";
+          continue;
+        }
+
+        if (c !== "\r") cur += c;
+      }
+
+      if (cur.length || row.length){
+        row.push(cur);
+        rows.push(row);
+      }
+
+      return rows;
+    }
+
+    function normalize(s){
+      return (s ?? "").toString().trim().toLowerCase();
+    }
+
+    function starString(n){
+      const num = Number(n);
+      if (!Number.isFinite(num) || num <= 0) return "";
+      const clamped = Math.max(1, Math.min(5, Math.round(num)));
+      return "★★★★★".slice(0, clamped) + "☆☆☆☆☆".slice(0, 5 - clamped);
+    }
+
+    function safeText(s){
+      return (s ?? "").toString().trim();
+    }
+
+    function renderReviews(items){
+      const grid = document.getElementById("reviewsGrid");
+      grid.innerHTML = "";
+
+      if (!items.length){
+        grid.innerHTML = `<div class="review-card" style="grid-column:1/-1">
+          <p class="review-text" style="color: rgba(255,255,255,.78); margin:0;">
+            Még nincs jóváhagyott vélemény.
+          </p>
+        </div>`;
+        return;
+      }
+
+      for (const it of items){
+        const card = document.createElement("div");
+        card.className = "review-card";
+
+        const stars = it.stars ? `<div class="stars">${it.stars}</div>` : `<div></div>`;
+        const meta = it.date ? `<div class="meta">${it.date}</div>` : `<div class="meta"></div>`;
+
+        card.innerHTML = `
+          <div class="review-top">
+            ${stars}
+            ${meta}
+          </div>
+          <p class="review-text">${escapeHTML(it.text)}</p>
+        `;
+        grid.appendChild(card);
+      }
+    }
+
+    function escapeHTML(str){
+      return (str ?? "").toString()
         .replaceAll("&","&amp;")
         .replaceAll("<","&lt;")
         .replaceAll(">","&gt;")
@@ -495,93 +501,72 @@
         .replaceAll("'","&#039;");
     }
 
-    // egyszerű CSV parser (idézőjeles mezők is)
-    function parseCSV(text) {
-      const rows = [];
-      let row = [];
-      let cur = "";
-      let inQuotes = false;
+    async function loadReviews(){
+      const badge = document.getElementById("reviewsBadge");
+      const status = document.getElementById("reviewsStatus");
 
-      for (let i = 0; i < text.length; i++) {
-        const c = text[i];
-        const n = text[i + 1];
+      badge.textContent = "⏳ Betöltés…";
+      status.textContent = "";
 
-        if (c === '"' && inQuotes && n === '"') { cur += '"'; i++; continue; }
-        if (c === '"') { inQuotes = !inQuotes; continue; }
+      try{
+        // cache-buster
+        const url = SHEET_CSV_URL + (SHEET_CSV_URL.includes("?") ? "&" : "?") + "t=" + Date.now();
+        const res = await fetch(url, { method:"GET" });
+        if (!res.ok) throw new Error("CSV letöltés sikertelen: " + res.status);
 
-        if (c === "," && !inQuotes) { row.push(cur); cur = ""; continue; }
-        if ((c === "\n" || c === "\r") && !inQuotes) {
-          if (c === "\r" && n === "\n") i++;
-          row.push(cur);
-          rows.push(row);
-          row = [];
-          cur = "";
-          continue;
+        const csvText = await res.text();
+
+        const rows = parseCSV(csvText);
+        if (!rows.length) throw new Error("Üres CSV.");
+
+        const header = rows[0].map(h => h.trim());
+        const idxText = header.indexOf(COL_TEXT);
+        const idxApproved = header.indexOf(COL_APPROVED);
+        const idxRating = header.indexOf(COL_RATING);
+        const idxDate = header.findIndex(h => normalize(h) === "submitted at" || normalize(h) === "submitted" || normalize(h) === "submitted_at" || normalize(h) === "submitted at ");
+
+        if (idxText === -1) throw new Error(`Hiányzó oszlop: "${COL_TEXT}"`);
+        if (idxApproved === -1) throw new Error(`Hiányzó oszlop: "${COL_APPROVED}"`);
+
+        const items = [];
+        for (let i=1; i<rows.length; i++){
+          const r = rows[i];
+          if (!r || !r.length) continue;
+
+          const approved = normalize(r[idxApproved]);
+          if (approved !== APPROVED_VALUE) continue;
+
+          const text = safeText(r[idxText]);
+          if (!text) continue;
+
+          const rating = idxRating !== -1 ? safeText(r[idxRating]) : "";
+          const stars = rating ? starString(rating) : "";
+
+          const dateRaw = idxDate !== -1 ? safeText(r[idxDate]) : "";
+          const date = dateRaw ? dateRaw.replace("T"," ").replace("Z","") : "";
+
+          items.push({ text, stars, date });
         }
-        cur += c;
+
+        // legfrissebb elöl (ha van dátum)
+        items.sort((a,b) => (b.date || "").localeCompare(a.date || ""));
+
+        renderReviews(items);
+
+        badge.textContent = "✅ Betöltve";
+        status.textContent = `${items.length} jóváhagyott vélemény megjelenítve.`;
+
+      }catch(err){
+        console.error(err);
+        badge.textContent = "⚠️ Nem sikerült betölteni";
+        status.textContent = "Ellenőrizd a publikus CSV linket és az oszlopneveket a táblában.";
+        renderReviews([]);
       }
-      if (cur.length || row.length) { row.push(cur); rows.push(row); }
-      return rows;
     }
 
-    function stars(n) {
-      const r = Math.max(1, Math.min(5, Number(n) || 5));
-      return "★".repeat(r) + "☆".repeat(5 - r);
-    }
+    document.getElementById("btnRefresh").addEventListener("click", loadReviews);
 
-    function findIndex(headers, name) {
-      const target = name.trim().toLowerCase();
-      return headers.findIndex(h => String(h).trim().toLowerCase() === target);
-    }
-
-    async function loadReviews() {
-      reviewsList.innerHTML = "";
-
-      const res = await fetch(SHEET_CSV_URL, { cache: "no-store" });
-      const csv = await res.text();
-      const data = parseCSV(csv);
-
-      if (!data.length) return;
-
-      const headers = data.shift();
-
-      // A te sheeted oszlopai alapján:
-      const idxText = findIndex(headers, "Véleményed");
-      const idxRating = findIndex(headers, "Mennyire v");
-      const idxApprove = findIndex(headers, "Megjelenhet?");
-      const idxDate = findIndex(headers, "Submitted at");
-
-      const approved = data
-        .filter(r => {
-          const v = String(r[idxApprove] ?? "").trim().toLowerCase();
-          return v === "igen";
-        })
-        .map(r => ({
-          text: String(r[idxText] ?? "").trim(),
-          rating: Number(String(r[idxRating] ?? "5").trim()) || 5,
-          date: String(r[idxDate] ?? "").trim()
-        }))
-        .filter(x => x.text.length > 0)
-        .slice(-30) // utolsó 30
-        .reverse();
-
-      approved.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "review";
-        card.innerHTML = `
-          <div class="stars">${stars(item.rating)}</div>
-          <div class="txt">${escapeHtml(item.text)}</div>
-          ${item.date ? `<div class="meta">${escapeHtml(item.date)}</div>` : ""}
-        `;
-        reviewsList.appendChild(card);
-      });
-
-      // ha nincs még jóváhagyott, akkor egyszerűen üresen marad (nincs üzenet!)
-    }
-
-    refreshBtn.addEventListener("click", loadReviews);
-
-    // automatikus betöltés
+    // initial
     loadReviews();
   </script>
 </body>
