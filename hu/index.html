@@ -66,16 +66,24 @@
       font-size: 15px;
     }
 
-    /* ========= Topbar ========= */
+    /* ========= Topbar (scroll-safe blur) ========= */
     .topbar{
       position: fixed;
       top:0; left:0; right:0;
       z-index: 50;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       background: rgba(8,6,12,.55);
       border-bottom: 1px solid rgba(255,255,255,.06);
     }
+    /* blur csak desktopon + csak ha támogatott */
+    @supports (backdrop-filter: blur(12px)){
+      @media (min-width: 1024px){
+        .topbar{
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+        }
+      }
+    }
+
     .topbar-inner{
       height: 64px;
       display:flex;
@@ -155,17 +163,21 @@
       align-items:center; justify-content:center;
     }
 
-    /* ========= Hero: full-screen background ========= */
+    /* ========= Hero: full-screen background (FIX: full height + layers + content left) ========= */
     .hero{
       position: relative;
-      min-height: 100svh; /* mobile safe viewport */
+      min-height: 100vh;
+      min-height: 100svh;
+      min-height: 100dvh;
       padding-top: 64px;  /* topbar */
       display:flex;
       align-items:center;
+      overflow: hidden;   /* bg scale ne lógjon ki */
     }
 
     .hero-bg{
       position:absolute; inset:0;
+      z-index: 0;
       background-image: url("/hero.png");
       background-size: cover;
       background-position: center;
@@ -177,6 +189,7 @@
     /* overlay to keep text readable but not too dark on right */
     .hero-overlay{
       position:absolute; inset:0;
+      z-index: 1;
       background:
         radial-gradient(1100px 700px at 22% 42%, rgba(10,7,14,.18), rgba(10,7,14,.56) 62%, rgba(10,7,14,.68) 100%),
         linear-gradient(to right, rgba(10,7,14,.40), rgba(10,7,14,.26) 48%, rgba(10,7,14,.22));
@@ -185,8 +198,14 @@
 
     .hero-wrap{
       position: relative;
+      z-index: 2;
+
       width: min(var(--max), 92vw);
-      margin: 0 auto;
+
+      /* ✅ content balra (nem background) */
+      margin-left: clamp(14px, 4vw, 64px);
+      margin-right: auto;
+
       padding: 38px 0 56px;
     }
 
@@ -601,20 +620,17 @@
       transform: scale(1.35);
     }
 
-    /* ========= Scroll reveal ========= */
+    /* ========= Scroll reveal (FIX: no blur filter to reduce scroll jank) ========= */
     .reveal{
       opacity: 0;
       transform: translateY(16px) scale(.995);
-      filter: blur(6px);
       transition: opacity .75s ease,
-                  transform .75s cubic-bezier(.2,.8,.2,1),
-                  filter .75s ease;
-      will-change: opacity, transform, filter;
+                  transform .75s cubic-bezier(.2,.8,.2,1);
+      will-change: opacity, transform;
     }
     .reveal.is-visible{
       opacity: 1;
       transform: translateY(0) scale(1);
-      filter: blur(0);
     }
     .reveal[data-delay="1"]{ transition-delay: 80ms; }
     .reveal[data-delay="2"]{ transition-delay: 160ms; }
@@ -622,7 +638,7 @@
 
     @media (prefers-reduced-motion: reduce){
       html{ scroll-behavior:auto; }
-      .reveal{ opacity:1; transform:none; filter:none; transition:none; }
+      .reveal{ opacity:1; transform:none; transition:none; }
       .review-track{ scroll-behavior:auto; }
       .rating .star{ transition:none; animation:none !important; }
       .interactive, .btn{ transition:none; }
@@ -635,6 +651,12 @@
       .menu-btn{ display:inline-flex; }
       .nav{ display:none; }
       .what-grid{ grid-template-columns: 1fr; }
+
+      /* mobilon vissza középre (ne túl balra) */
+      .hero-wrap{
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
   </style>
 </head>
@@ -925,7 +947,7 @@
   <footer style="padding: 18px 0 60px; border-top:1px solid rgba(255,255,255,.08); background: rgba(10,8,14,.35); backdrop-filter: blur(10px);">
     <div class="container" style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; color:var(--muted); font-size:13px;">
       <div>© <span id="y"></span> Fitness Lady</div>
-      <div>Prémium dizájn • HU oldal</div>
+      <div>Prémium dizájn • HU oldal • Tüske web design</div>
     </div>
   </footer>
 
@@ -1006,7 +1028,6 @@
     (() => {
       const links = Array.from(document.querySelectorAll('.nav a'))
         .filter(a=>a.getAttribute('href')?.startsWith('#'));
-      const map = new Map(links.map(a=>[a.getAttribute('href'), a]));
       const sections = links
         .map(a => document.querySelector(a.getAttribute('href')))
         .filter(Boolean);
