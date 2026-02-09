@@ -1,87 +1,43 @@
-const CSV_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIH-tTccqy_yetPGUaqZ3wULe74ZVSzCX6wA7kZV-iWDu0I1I4_IBjTFggNS2xpZFqQwTXj3mnZeag/pub?gid=0&single=true&output=csv";
-
-function parseCSVLine(line) {
-  const out = [];
-  let cur = "";
-  let inQuotes = false;
-
-  for (let i = 0; i < line.length; i++) {
-    const ch = line[i];
-    if (ch === '"') {
-      if (inQuotes && line[i + 1] === '"') {
-        cur += '"';
-        i++;
-      } else {
-        inQuotes = !inQuotes;
-      }
-    } else if (ch === "," && !inQuotes) {
-      out.push(cur);
-      cur = "";
-    } else {
-      cur += ch;
+async function loadReviews() {
+  const container = document.getElementById('reviews-container');
+  container.textContent = 'Loading reviews...';
+  try {
+    const response = await fetch('/api/reviews');
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
-  }
-  out.push(cur);
-  return out;
-}
+    const reviews = await response.json();
+    container.textContent = '';
+    if (reviews.length === 0) {
+      container.textContent = 'No reviews available at the moment.';
+      return;
+    }
 
-function parseCSV(text) {
-  return text
-    .replace(/\r\n/g, "\n")
-    .replace(/\r/g, "\n")
-    .split("\n")
-    .filter(Boolean)
-    .map(parseCSVLine);
-}
+    reviews.forEach(review => {
+      const reviewDiv = document.createElement('div');
+      reviewDiv.className = 'review';
 
-function escapeHTML(str) {
-  return String(str ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
+      const author = document.createElement('h3');
+      author.textContent = review.author || 'Anonymous';
+      reviewDiv.appendChild(author);
 
-function loadReviews() {
-  const box = document.getElementById("reviews");
-  if (!box) return;
+      const body = document.createElement('p');
+      body.textContent = review.body || '';
+      reviewDiv.appendChild(body);
 
-  box.innerHTML = "Betöltés…";
-
-  fetch(CSV_URL, { cache: "no-store" })
-    .then((r) => r.text())
-    .then((csv) => {
-      const rows = parseCSV(csv);
-      const headers = rows.shift();
-
-      const iRate = headers.indexOf("Mennyire v");
-      const iText = headers.indexOf("Véleményed");
-      const iShow = headers.indexOf("Megjelenhet?");
-
-      const approved = rows.filter(
-        (r) => String(r[iShow]).toLowerCase() === "igen"
-      );
-
-      if (!approved.length) {
-        box.innerHTML = "Nincs megjeleníthető vélemény.";
-        return;
+      if (review.rating !== undefined && review.rating !== null) {
+        const rating = document.createElement('p');
+        rating.textContent = 'Rating: ' + review.rating;
+        reviewDiv.appendChild(rating);
       }
 
-      box.innerHTML = approved
-        .map(
-          (r) => `
-          <div class="review-card">
-            <strong>⭐ ${escapeHTML(r[iRate])}/5</strong><br>
-            ${escapeHTML(r[iText])}
-          </div>
-        `
-        )
-        .join("");
-    })
-    .catch(() => {
-      box.innerHTML = "Hiba a vélemények betöltésekor.";
+      container.appendChild(reviewDiv);
     });
+
+  } catch (error) {
+    container.textContent = 'Failed to load reviews. Please try again later.';
+    console.error('Error loading reviews:', error);
+  }
 }
 
-loadReviews();
+window.addEventListener('DOMContentLoaded', loadReviews);
