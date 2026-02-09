@@ -12,7 +12,6 @@ Behavior:
 - Posts a plan back to the issue for /ai plan.
 - For /ai pr: asks the model for a JSON change-set (allowed paths only),
   writes changes on a new branch, and opens a PR.
-- Strict allowlist: only paths under ".github/" and "docs/" are permitted.
 - PR-only: never pushes to main; always creates a branch + PR.
 
 Required env:
@@ -32,7 +31,7 @@ import random
 import re
 import sys
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import requests
 
@@ -48,8 +47,19 @@ BASE_BRANCH = (os.getenv("BASE_BRANCH") or "main").strip()
 API = "https://api.github.com"
 OPENAI_URL = "https://api.openai.com/v1/responses"
 
-# Allowlist: only docs/ and .github/
-ALLOWED_PREFIXES = ("docs/", ".github/")
+# ✅ EXPANDED allowlist:
+# - Prefixes (folders): docs/, .github/, hu/, de/
+# - Exact files: index.html, reviews.js
+ALLOWED_PREFIXES = (
+    "docs/",
+    ".github/",
+    "hu/",
+    "de/",
+)
+ALLOWED_EXACT_FILES = {
+    "index.html",
+    "reviews.js",
+}
 
 GH_HEADERS = {
     "Authorization": f"Bearer {GH_TOKEN}",
@@ -90,7 +100,6 @@ def jitter_sleep(attempt: int) -> None:
 # ----------------------------
 
 def gh(method: str, url: str, **kwargs) -> Any:
-    """GitHub request with debug + raises on error."""
     r = requests.request(method, url, headers=GH_HEADERS, timeout=60, **kwargs)
     print(f"[GH] {method} {url} -> {r.status_code}")
     if not r.ok:
@@ -122,7 +131,6 @@ def create_branch(branch_name: str, from_sha: str) -> None:
     gh("POST", url, json={"ref": f"refs/heads/{branch_name}", "sha": from_sha})
 
 def get_file_sha(path: str, ref: str) -> Optional[str]:
-    # contents API returns 404 if not exists
     url = f"{API}/repos/{REPO_FULL}/contents/{path}"
     r = requests.get(url, headers=GH_HEADERS, params={"ref": ref}, timeout=60)
     print(f"[GH] GET {url}?ref={ref} -> {r.status_code}")
@@ -137,16 +145,13 @@ def get_file_sha(path: str, ref: str) -> Optional[str]:
 def put_file(path: str, content_text: str, message: str, branch: str) -> None:
     url = f"{API}/repos/{REPO_FULL}/contents/{path}"
     existing_sha = get_file_sha(path, branch)
+
+    import base64
     payload: Dict[str, Any] = {
         "message": message,
-        "content": content_text.encode("utf-8").decode("utf-8").encode("utf-8").hex(),  # temp
+        "content": base64.b64encode(content_text.encode("utf-8")).decode("ascii"),
         "branch": branch,
     }
-
-    # GitHub expects base64, so do it properly:
-    import base64
-    payload["content"] = base64.b64encode(content_text.encode("utf-8")).decode("ascii")
-
     if existing_sha:
         payload["sha"] = existing_sha
 
@@ -203,11 +208,6 @@ def call_openai(prompt: str) -> str:
     die("OpenAI API: too many transient errors (429/5xx) after retries")
 
 def extract_json(text: str) -> Dict[str, Any]:
-    """
-    Robust JSON extractor:
-    - If text is pure JSON, parse it.
-    - Else extract the first {...} block and parse.
-    """
     text = text.strip()
     try:
         return json.loads(text)
@@ -223,11 +223,20 @@ def extract_json(text: str) -> Dict[str, Any]:
 # Command logic
 # ----------------------------
 
+def is_allowed_path(path: str) -> bool:
+    path = path.lstrip("/")
+    if path in ALLOWED_EXACT_FILES:
+        return True
+    return any(path.startswith(pfx) for pfx in ALLOWED_PREFIXES)
+
 def validate_path(path: str) -> None:
-    if not any(path.startswith(pfx) for pfx in ALLOWED_PREFIXES):
-        raise ValueError(f"Path not allowed: {path} (allowed: {ALLOWED_PREFIXES})")
+    path = path.lstrip("/")
     if ".." in path or path.startswith("/"):
         raise ValueError(f"Invalid path: {path}")
+    if not is_allowed_path(path):
+        raise ValueError(
+            f"Path not allowed: {path} (allowed prefixes: {ALLOWED_PREFIXES}, exact: {sorted(ALLOWED_EXACT_FILES)})"
+        )
 
 def build_plan_prompt(user_request: str) -> str:
     return f"""You are an assistant helping with a GitHub repository workflow.
@@ -235,7 +244,9 @@ Return a concise, actionable plan in Markdown bullet points.
 
 Repo: {REPO_FULL}
 Constraints:
-- Only docs/ and .github/ paths are allowed for code changes.
+- Only allowed paths can be changed:
+  - prefixes: {list(ALLOWED_PREFIXES)}
+  - exact files: {sorted(ALLOWED_EXACT_FILES)}
 - PR-only workflow (never push to main).
 
 User request:
@@ -249,7 +260,9 @@ Repo: {REPO_FULL}
 Base branch: {BASE_BRANCH}
 
 STRICT constraints:
-- You may ONLY modify or create files under these prefixes: {list(ALLOWED_PREFIXES)}
+- You may ONLY modify/create/delete files within:
+  - prefixes: {list(ALLOWED_PREFIXES)}
+  - exact files: {sorted(ALLOWED_EXACT_FILES)}
 - Do NOT include any other paths.
 - Output MUST be valid JSON (no prose).
 
@@ -260,7 +273,7 @@ JSON schema:
   "commit_message": "Commit message",
   "changes": [
     {{
-      "path": "docs/.. or .github/..",
+      "path": "relative/path",
       "action": "upsert" | "delete",
       "content": "file content (required for upsert)"
     }}
@@ -279,7 +292,6 @@ def cmd_plan(user_request: str) -> None:
     post_issue_comment("🧠 **AI PLAN**\n\n" + plan_md)
 
 def cmd_pr(user_request: str) -> None:
-    # Ask model for JSON change-set
     prompt = build_pr_prompt(user_request)
     raw = call_openai(prompt)
 
@@ -298,7 +310,6 @@ def cmd_pr(user_request: str) -> None:
     commit_message = (spec.get("commit_message") or "chore: AI changes").strip()
     changes = spec.get("changes") or []
 
-    # Validate changes
     if not isinstance(changes, list) or not changes:
         post_issue_comment("❌ **AI PR generation failed**: `changes` must be a non-empty list.")
         return
@@ -307,7 +318,7 @@ def cmd_pr(user_request: str) -> None:
         if not isinstance(ch, dict):
             post_issue_comment("❌ **AI PR generation failed**: each change must be an object.")
             return
-        path = (ch.get("path") or "").strip()
+        path = (ch.get("path") or "").strip().lstrip("/")
         action = (ch.get("action") or "").strip()
         if not path or action not in ("upsert", "delete"):
             post_issue_comment("❌ **AI PR generation failed**: invalid change entry.")
@@ -321,7 +332,6 @@ def cmd_pr(user_request: str) -> None:
             post_issue_comment(f"❌ **AI PR generation failed**: missing `content` for {path}")
             return
 
-    # Create branch from base
     base_sha = get_default_branch_sha(BASE_BRANCH)
     branch_name = f"ai/pr-{ISSUE_NUMBER}-{int(time.time())}"
 
@@ -331,21 +341,18 @@ def cmd_pr(user_request: str) -> None:
         post_issue_comment(f"❌ Failed to create branch `{branch_name}`: `{e}`")
         return
 
-    # Apply file changes (contents API)
     try:
         for ch in changes:
-            path = ch["path"].strip()
+            path = ch["path"].strip().lstrip("/")
             action = ch["action"].strip()
             if action == "delete":
                 delete_file(path, commit_message, branch_name)
             else:
-                content = ch["content"]
-                put_file(path, content, commit_message, branch_name)
+                put_file(path, ch["content"], commit_message, branch_name)
     except Exception as e:
         post_issue_comment(f"❌ Failed applying changes on `{branch_name}`: `{e}`")
         return
 
-    # Open PR
     try:
         pr_url = open_pull_request(
             title=title,
@@ -369,7 +376,6 @@ def cmd_pr(user_request: str) -> None:
 # ----------------------------
 
 def parse_command(body: str) -> Tuple[str, str]:
-    # Expected: /ai plan ... OR /ai pr ...
     m = re.match(r"^\s*/ai\s+(plan|pr)\s*(.*)\s*$", body, flags=re.I | re.S)
     if not m:
         return "", ""
@@ -384,10 +390,6 @@ def main() -> None:
     if not cmd:
         print("[AI-BRIDGE] Not an /ai command. Exiting.")
         return
-
-    # Optional quick acknowledgement (commenting is now allowed if workflow has issues: write)
-    # Commenting on every trigger is noisy, so we keep it off by default.
-    # post_issue_comment("✅ AI Bridge triggered. Processing command…")
 
     if cmd == "plan":
         if not rest:
