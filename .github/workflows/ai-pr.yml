@@ -7,10 +7,11 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  issues: read
+  issues: write
 
 jobs:
   ai_pr:
+    # Only run on issues (not PRs), only on /ai commands, only if the commenter is the owner
     if: >
       github.event.issue.pull_request == null &&
       startsWith(github.event.comment.body, '/ai ') &&
