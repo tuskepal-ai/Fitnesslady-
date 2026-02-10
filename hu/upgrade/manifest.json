@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "updatedAt": "2026-02-10",
+  "modules": {
+    "example": {
+      "enabled": true,
+      "html": "/hu/upgrade/modules/example.html",
+      "js": "/hu/upgrade/modules/example.js"
+    }
+  }
+}
