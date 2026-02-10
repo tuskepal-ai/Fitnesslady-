@@ -2,10 +2,15 @@
   "version": 1,
   "updatedAt": "2026-02-10",
   "modules": {
-    "example": {
+    "about": {
       "enabled": true,
-      "html": "/hu/upgrade/modules/example.html",
-      "js": "/hu/upgrade/modules/example.js"
+      "html": "/hu/upgrade/modules/about.html",
+      "js": "/hu/upgrade/modules/about.js"
+    },
+    "afsz": {
+      "enabled": true,
+      "html": "/hu/upgrade/modules/afsz.html",
+      "js": "/hu/upgrade/modules/afsz.js"
     }
   }
 }
