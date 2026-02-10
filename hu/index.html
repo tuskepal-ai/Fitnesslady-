@@ -618,6 +618,82 @@
       .what-grid{ grid-template-columns: 1fr; }
       .hero-wrap{ margin-left: auto; margin-right: auto; }
     }
+
+    /* ========= AFSZ MODAL (only shows on click) ========= */
+    .modal-overlay{
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      background: rgba(0,0,0,.58);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+    .modal-overlay.is-open{ display: flex; }
+
+    .modal{
+      width: min(980px, 94vw);
+      max-height: min(78vh, 720px);
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .modal-header{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(10,8,14,.45);
+    }
+    .modal-title{
+      margin:0;
+      font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+      font-size: 20px;
+      letter-spacing: -.2px;
+    }
+    .modal-close{
+      width: 40px; height: 40px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.9);
+      cursor: pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .modal-body{
+      padding: 16px;
+      overflow: auto;
+      max-height: calc(min(78vh, 720px) - 64px);
+      background: rgba(7,6,11,.38);
+    }
+
+    /* modal typography consistent with site */
+    .modal-body h3{
+      margin: 16px 0 8px;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+    .modal-body p{
+      margin: 0 0 10px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 13.5px;
+    }
+
+    /* prevent background scroll when modal open */
+    body.modal-lock{
+      overflow: hidden;
+      touch-action: none;
+    }
   </style>
 </head>
 
@@ -865,19 +941,22 @@
     <div class="container">
       <div class="section-title reveal">AFSZ</div>
       <p class="section-sub reveal" data-delay="1">
-        Ide jönnek az Általános Szerződési Feltételek rövid pontjai (később külön oldalra is kitehetjük).
+        Az Általános Szerződési Feltételek kattintásra nyílnak meg egy prémium modalban (nem fixen az oldalon).
       </p>
 
       <div class="glass interactive pkg reveal" data-delay="2">
         <div class="pkg-top">
-          <h3>Gyakori kérdések</h3>
-          <span class="tag">Rövid</span>
+          <h3>Általános Szerződési Feltételek</h3>
+          <span class="tag">Modal</span>
         </div>
-        <ul class="list">
-          <li><span class="check"></span> Lemondás / módosítás feltételei</li>
-          <li><span class="check"></span> Fizetés és hozzáférés</li>
-          <li><span class="check"></span> Adatvédelem</li>
-        </ul>
+        <p>
+          A részletek megtekintéséhez kattints az alábbi gombra.
+        </p>
+        <div class="pkg-actions" style="grid-template-columns: 1fr;">
+          <button class="btn primary interactive" id="openAfszBtn" type="button" aria-haspopup="dialog" aria-controls="afszModalOverlay">
+            ÁFSZ megnyitása
+          </button>
+        </div>
       </div>
     </div>
   </section>
@@ -899,6 +978,104 @@
       </div>
     </div>
   </section>
+
+  <!-- AFSZ MODAL (hidden until click) -->
+  <div class="modal-overlay" id="afszModalOverlay" role="dialog" aria-modal="true" aria-labelledby="afszModalTitle" aria-hidden="true">
+    <div class="glass modal" role="document">
+      <div class="modal-header">
+        <h2 class="modal-title" id="afszModalTitle">Általános Szerződési Feltételek (ÁFSZ)</h2>
+        <button class="modal-close interactive" id="closeAfszBtn" type="button" aria-label="Bezárás">✕</button>
+      </div>
+
+      <div class="modal-body" id="afszModalBody">
+        <p><b>Hatályos:</b> 2026-02-10</p>
+        <p><b>Weboldal / Márka:</b> FitnessLady</p>
+        <p><b>Szolgáltató:</b> Tüske Farkas Edina (FitnessLady)</p>
+        <p><b>Székhely:</b> 3930 Visp, Mondstrasse 6, Svájc</p>
+        <p><b>E-mail:</b> fitnesslady92@gmail.com</p>
+        <p><b>Deviza:</b> HUF és CHF</p>
+        <p><b>Fizetési módok:</b> nemzetközi utalás, TWINT, Payrexx</p>
+
+        <h3>1. Fogalmak</h3>
+        <p><b>Szolgáltató:</b> Tüske Farkas Edina (FitnessLady), aki a szolgáltatást nyújtja.<br>
+           <b>Felhasználó / Vásárló:</b> aki a weboldalon szolgáltatást igénybe vesz vagy vásárol.<br>
+           <b>Szolgáltatás:</b> online edzésanyagok, programok, csomagok, digitális tartalmak a weboldalon leírtak szerint.<br>
+           <b>Digitális tartalom:</b> online elérhető vagy letölthető anyag (pl. videó, program, útmutató).</p>
+
+        <h3>2. A szolgáltatás leírása</h3>
+        <ul class="list">
+          <li><span class="check"></span> A csomagok tartalmát és időtartamát a csomagleírás tartalmazza.</li>
+          <li><span class="check"></span> A szolgáltatás online formában érhető el, hozzáférést vásárlás után biztosítunk.</li>
+          <li><span class="check"></span> A tartalmak frissíthetők, a megvásárolt csomag lényegi értékének csorbítása nélkül.</li>
+        </ul>
+
+        <h3>3. Megrendelés és szerződéskötés</h3>
+        <ul class="list">
+          <li><span class="check"></span> Vásárlás: csomag kiválasztása + fizetés.</li>
+          <li><span class="check"></span> Szerződés: sikeres fizetéssel és/vagy visszaigazolással jön létre.</li>
+          <li><span class="check"></span> Valós adatok megadása kötelező.</li>
+        </ul>
+
+        <h3>4. Díjazás és fizetés</h3>
+        <ul class="list">
+          <li><span class="check"></span> Deviza: HUF és CHF.</li>
+          <li><span class="check"></span> Fizetés: nemzetközi utalás, TWINT, Payrexx.</li>
+          <li><span class="check"></span> Sikeres fizetés után hozzáférést biztosítunk.</li>
+        </ul>
+
+        <h3>5. Hozzáférés, technikai feltételek</h3>
+        <ul class="list">
+          <li><span class="check"></span> Internet és kompatibilis eszköz szükséges.</li>
+          <li><span class="check"></span> Átmeneti kiesés előfordulhat (karbantartás/külső hiba).</li>
+          <li><span class="check"></span> Hozzáférési adatok védelme a vásárló felelőssége.</li>
+        </ul>
+
+        <h3>6. Lemondás, elállás, visszatérítés</h3>
+        <ul class="list">
+          <li><span class="check"></span> Digitális tartalomnál a hozzáférés megkezdése után a visszatérítés korlátozott lehet.</li>
+          <li><span class="check"></span> Megkezdés előtt, hozzáférés-átadás nélkül: egyedi elbírálás.</li>
+          <li><span class="check"></span> Tartós elérhetetlenségnél arányos jóváírás/visszatérítés lehetséges.</li>
+          <li><span class="check"></span> Igény: írásban, rendelés azonosítóval.</li>
+        </ul>
+
+        <h3>7. Felelősségkizárás és egészségügyi nyilatkozat</h3>
+        <ul class="list">
+          <li><span class="check"></span> A programok információs célúak, használat saját felelősségre történik.</li>
+          <li><span class="check"></span> Egészségi alkalmasság esetén végezhető, szükség esetén orvosi egyeztetéssel.</li>
+          <li><span class="check"></span> Nem rendeltetésszerű használatból eredő károkért felelősség nem vállalható.</li>
+        </ul>
+
+        <h3>8. Szerzői jog, felhasználási feltételek</h3>
+        <ul class="list">
+          <li><span class="check"></span> Anyagok a Szolgáltató szellemi tulajdonát képezik.</li>
+          <li><span class="check"></span> Másolás/megosztás/továbbértékesítés engedély nélkül tilos.</li>
+          <li><span class="check"></span> Jogosulatlan megosztás esetén hozzáférés megszüntethető.</li>
+        </ul>
+
+        <h3>9. Adatkezelés (rövid)</h3>
+        <ul class="list">
+          <li><span class="check"></span> A megrendelés teljesítéséhez szükséges adatokat kezeljük.</li>
+          <li><span class="check"></span> Részletek az adatkezelési tájékoztatóban (amennyiben elérhető).</li>
+        </ul>
+
+        <h3>10. Panaszkezelés, vitarendezés</h3>
+        <ul class="list">
+          <li><span class="check"></span> Panasz: fitnesslady92@gmail.com</li>
+          <li><span class="check"></span> Irányadó jog: svájci jog. Illetékesség: Svájc, Valais/VS (Visp).</li>
+        </ul>
+
+        <h3>11. Záró rendelkezések</h3>
+        <ul class="list">
+          <li><span class="check"></span> Az ÁFSZ módosítható, közzététellel hatályos.</li>
+          <li><span class="check"></span> A már megvásárolt szolgáltatásokra a vásárláskor hatályos ÁFSZ irányadó (kivéve jogszabály).</li>
+        </ul>
+
+        <p style="margin-top:14px; color:var(--muted2); font-size:12.8px;">
+          Tüske web design
+        </p>
+      </div>
+    </div>
+  </div>
 
   <footer style="padding: 18px 0 60px; border-top:1px solid rgba(255,255,255,.08); background: rgba(10,8,14,.55); backdrop-filter: blur(10px);">
     <div class="container" style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; color:rgba(255,255,255,.70); font-size:13px;">
@@ -1028,6 +1205,44 @@
       };
       r.addEventListener('click', kick);
       r.addEventListener('touchstart', kick, {passive:true});
+    })();
+
+    /* ========= AFSZ MODAL LOGIC ========= */
+    (() => {
+      const openBtn = document.getElementById('openAfszBtn');
+      const overlay = document.getElementById('afszModalOverlay');
+      const closeBtn = document.getElementById('closeAfszBtn');
+      let lastFocus = null;
+
+      if(!openBtn || !overlay || !closeBtn) return;
+
+      const openModal = () => {
+        lastFocus = document.activeElement;
+        overlay.classList.add('is-open');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-lock');
+        closeBtn.focus({ preventScroll: true });
+      };
+
+      const closeModal = () => {
+        overlay.classList.remove('is-open');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-lock');
+        if(lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus({ preventScroll: true });
+      };
+
+      openBtn.addEventListener('click', openModal);
+
+      closeBtn.addEventListener('click', closeModal);
+
+      overlay.addEventListener('click', (e) => {
+        // close only if clicked on overlay background, not inside modal content
+        if(e.target === overlay) closeModal();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if(overlay.classList.contains('is-open') && e.key === 'Escape') closeModal();
+      });
     })();
 
     /* ========= Reviews: load from Google Sheets CSV + auto-slide carousel ========= */
@@ -1281,4 +1496,3 @@
   </script>
 </body>
 </html>
-
