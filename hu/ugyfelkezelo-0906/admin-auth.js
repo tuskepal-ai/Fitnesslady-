@@ -1,28 +1,13 @@
-/* FitnessLady AdminAuth (A-option)
-   - Client-side gate (not server-auth)
-   - Uses SHA-256 hash compare + sessionStorage token
-*/
-
+// admin-auth.js
 const AdminAuth = (() => {
-  // ====== CONFIG ======
-  const USERNAME = "admin";
-
-  // SHA-256("FitnessLady-0906!") = generated once (you can change it)
-  // If you want a new password:
-  // open /ugyfelkezelo-0906/?gen=1 -> generate hash -> paste below.
-  const PASSWORD_SHA256 = "7a4a2bb9f99b4c06c6d8b6e7d1b1b48b7b8f7b8d9f6ce0fd7f4f1a0b1f9b5b26";
+  // ✅ ÚJ belépési adatok
+  const USERNAME = "Palko";
+  const PASSWORD_SHA256 = "9d7475cc6d85354c4a3016ecf6d8747f23c54baccc77671eba46be852d9bb753";
 
   const SESSION_KEY = "fl_admin_session_v1";
-  const SESSION_TTL_MIN = 60; // 60 minutes
+  const SESSION_TTL_MIN = 60; // perc
 
-  // ====== HELPERS ======
-  const now = () => Date.now();
-
-  async function sha256(text) {
-    const enc = new TextEncoder().encode(String(text ?? ""));
-    const buf = await crypto.subtle.digest("SHA-256", enc);
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
-  }
+  function now() { return Date.now(); }
 
   function setSession() {
     const payload = { t: now(), ttl: SESSION_TTL_MIN };
@@ -43,6 +28,12 @@ const AdminAuth = (() => {
 
   function logout() {
     sessionStorage.removeItem(SESSION_KEY);
+  }
+
+  async function sha256(text) {
+    const enc = new TextEncoder().encode(text);
+    const buf = await crypto.subtle.digest("SHA-256", enc);
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
   }
 
   async function login(u, p) {
