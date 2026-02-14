@@ -1,0 +1,46 @@
+{
+  "customerId": "demo001",
+  "published": true,
+  "weeks": {
+    "1": [
+      "v_ful_001",
+      "v_lwr_001",
+      "v_mob_001"
+    ],
+    "2": [
+      "v_lwr_001",
+      "v_upr_001",
+      "v_car_001"
+    ],
+    "3": [
+      "v_ful_001",
+      "v_lwr_001",
+      "v_cor_001"
+    ],
+    "4": [
+      "v_lwr_001",
+      "v_ful_001",
+      "v_car_001"
+    ]
+  },
+  "slots": {
+    "slot1": {
+      "label": "Fő fókusz",
+      "videoId": "v_lwr_001",
+      "note": "Most a farizom aktivációt finomítjuk."
+    },
+    "slot2": {
+      "label": "Core",
+      "videoId": "v_cor_001",
+      "note": "Stabil has, jobb tartás."
+    },
+    "slot3": {
+      "label": "Kardió/Mobilitás",
+      "videoId": "v_mob_001",
+      "note": "Regeneráció + könnyű mobilitás."
+    }
+  },
+  "vault": [
+    "v_mob_001"
+  ]
+}

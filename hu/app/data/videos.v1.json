@@ -1,0 +1,135 @@
+{
+  "version": "v1",
+  "videos": [
+    {
+      "id": "v_lwr_001",
+      "title": "Alsótest – Glute fókusz A",
+      "type": "LWR",
+      "level": 2,
+      "goalTags": [
+        "forma"
+      ],
+      "durationMin": 40,
+      "equipment": [
+        "testsuly",
+        "gumikot"
+      ],
+      "protect": "stream",
+      "assetRef": "demo://v_lwr_001",
+      "status": "active",
+      "focusTags": [
+        "glute",
+        "comb"
+      ],
+      "variantGroup": "glute_lower"
+    },
+    {
+      "id": "v_upr_001",
+      "title": "Felsőtest – Tartás & kar",
+      "type": "UPR",
+      "level": 2,
+      "goalTags": [
+        "forma",
+        "ero"
+      ],
+      "durationMin": 35,
+      "equipment": [
+        "testsuly",
+        "kezisuly"
+      ],
+      "protect": "stream",
+      "assetRef": "demo://v_upr_001",
+      "status": "active",
+      "focusTags": [
+        "tartas",
+        "kar"
+      ],
+      "variantGroup": "upr_posture"
+    },
+    {
+      "id": "v_ful_001",
+      "title": "Full body – Erősítés",
+      "type": "FUL",
+      "level": 2,
+      "goalTags": [
+        "zsirvesztes",
+        "ero"
+      ],
+      "durationMin": 42,
+      "equipment": [
+        "testsuly"
+      ],
+      "protect": "stream",
+      "assetRef": "demo://v_ful_001",
+      "status": "active",
+      "focusTags": [
+        "full"
+      ],
+      "variantGroup": "full_strength"
+    },
+    {
+      "id": "v_cor_001",
+      "title": "Core – Stabilitás",
+      "type": "COR",
+      "level": 2,
+      "goalTags": [
+        "forma",
+        "ero"
+      ],
+      "durationMin": 25,
+      "equipment": [
+        "testsuly"
+      ],
+      "protect": "stream",
+      "assetRef": "demo://v_cor_001",
+      "status": "active",
+      "focusTags": [
+        "has",
+        "core"
+      ],
+      "variantGroup": "core_stability"
+    },
+    {
+      "id": "v_car_001",
+      "title": "Kardió – Finisher light",
+      "type": "CAR",
+      "level": 2,
+      "goalTags": [
+        "zsirvesztes"
+      ],
+      "durationMin": 20,
+      "equipment": [
+        "testsuly"
+      ],
+      "protect": "stream",
+      "assetRef": "demo://v_car_001",
+      "status": "active",
+      "focusTags": [
+        "kardio"
+      ],
+      "variantGroup": "cardio_finisher"
+    },
+    {
+      "id": "v_mob_001",
+      "title": "Mobilitás – Regeneráció",
+      "type": "MOB",
+      "level": 1,
+      "goalTags": [
+        "forma",
+        "zsirvesztes",
+        "ero"
+      ],
+      "durationMin": 18,
+      "equipment": [
+        "testsuly"
+      ],
+      "protect": "stream",
+      "assetRef": "demo://v_mob_001",
+      "status": "active",
+      "focusTags": [
+        "mobilitas"
+      ],
+      "variantGroup": "mob_recovery"
+    }
+  ]
+}

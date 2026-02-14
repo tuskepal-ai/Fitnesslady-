@@ -1,0 +1,279 @@
+{
+  "version": "v1",
+  "packages": {
+    "start": {
+      "weeks": 4,
+      "weeklyVideos": 3
+    },
+    "balance": {
+      "weeks": 6,
+      "weeklyVideos": 4
+    },
+    "pro": {
+      "weeks": 12,
+      "weeklyVideos": 5
+    }
+  },
+  "tracks": [
+    "F",
+    "Z",
+    "E"
+  ],
+  "matrix": {
+    "start": {
+      "F": [
+        [
+          "FUL",
+          "LWR",
+          "MOB"
+        ],
+        [
+          "LWR",
+          "UPR",
+          "CAR"
+        ],
+        [
+          "FUL",
+          "LWR",
+          "COR"
+        ],
+        [
+          "LWR",
+          "FUL",
+          "CAR"
+        ]
+      ],
+      "Z": [
+        [
+          "FUL",
+          "CAR",
+          "MOB"
+        ],
+        [
+          "LWR",
+          "CAR",
+          "COR"
+        ],
+        [
+          "FUL",
+          "CAR",
+          "UPR"
+        ],
+        [
+          "FUL",
+          "CAR",
+          "MOB"
+        ]
+      ],
+      "E": [
+        [
+          "LWR",
+          "UPR",
+          "MOB"
+        ],
+        [
+          "FUL",
+          "LWR",
+          "COR"
+        ],
+        [
+          "LWR",
+          "UPR",
+          "MOB"
+        ],
+        [
+          "FUL",
+          "LWR",
+          "COR"
+        ]
+      ]
+    },
+    "balance": {
+      "F": [
+        [
+          "LWR",
+          "UPR",
+          "FUL",
+          "MOB"
+        ],
+        [
+          "LWR",
+          "COR",
+          "FUL",
+          "CAR"
+        ],
+        [
+          "LWR",
+          "UPR",
+          "LWR",
+          "MOB"
+        ],
+        [
+          "LWR",
+          "FUL",
+          "COR",
+          "CAR"
+        ],
+        [
+          "LWR",
+          "UPR",
+          "FUL",
+          "MOB"
+        ],
+        [
+          "LWR",
+          "FUL",
+          "COR",
+          "CAR"
+        ]
+      ],
+      "Z": [
+        [
+          "FUL",
+          "CAR",
+          "COR",
+          "MOB"
+        ],
+        [
+          "LWR",
+          "CAR",
+          "FUL",
+          "CAR"
+        ],
+        [
+          "FUL",
+          "CAR",
+          "UPR",
+          "COR"
+        ],
+        [
+          "LWR",
+          "CAR",
+          "FUL",
+          "MOB"
+        ],
+        [
+          "FUL",
+          "CAR",
+          "COR",
+          "CAR"
+        ],
+        [
+          "LWR",
+          "FUL",
+          "CAR",
+          "MOB"
+        ]
+      ],
+      "E": [
+        [
+          "LWR",
+          "UPR",
+          "FUL",
+          "COR"
+        ],
+        [
+          "LWR",
+          "UPR",
+          "FUL",
+          "MOB"
+        ],
+        [
+          "LWR",
+          "UPR",
+          "LWR",
+          "COR"
+        ],
+        [
+          "FUL",
+          "LWR",
+          "UPR",
+          "MOB"
+        ],
+        [
+          "LWR",
+          "UPR",
+          "FUL",
+          "COR"
+        ],
+        [
+          "LWR",
+          "UPR",
+          "FUL",
+          "MOB"
+        ]
+      ]
+    },
+    "pro": {
+      "F": {
+        "1-4": [
+          "LWR",
+          "UPR",
+          "FUL",
+          "COR",
+          "MOB"
+        ],
+        "5-8": [
+          "LWR",
+          "UPR",
+          "LWR",
+          "FUL",
+          "CAR"
+        ],
+        "9-12": [
+          "LWR",
+          "FUL",
+          "COR",
+          "CAR",
+          "MOB"
+        ]
+      },
+      "Z": {
+        "1-4": [
+          "FUL",
+          "CAR",
+          "COR",
+          "MOB",
+          "UPR"
+        ],
+        "5-8": [
+          "LWR",
+          "FUL",
+          "CAR",
+          "COR",
+          "CAR"
+        ],
+        "9-12": [
+          "FUL",
+          "CAR",
+          "COR",
+          "CAR",
+          "MOB"
+        ]
+      },
+      "E": {
+        "1-4": [
+          "LWR",
+          "UPR",
+          "FUL",
+          "COR",
+          "MOB"
+        ],
+        "5-8": [
+          "LWR",
+          "UPR",
+          "LWR",
+          "UPR",
+          "COR"
+        ],
+        "9-12": [
+          "LWR",
+          "UPR",
+          "FUL",
+          "COR",
+          "MOB"
+        ]
+      }
+    }
+  }
+}

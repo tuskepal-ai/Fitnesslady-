@@ -1,0 +1,23 @@
+{
+  "id": "demo001",
+  "name": "Vendég felhasználó",
+  "email": "demo@fitnesslady.local",
+  "package": "start",
+  "track": "F",
+  "level": 2,
+  "equipment": [
+    "testsuly",
+    "gumikot",
+    "kezisuly"
+  ],
+  "focus": [
+    "glute",
+    "has"
+  ],
+  "constraints": [],
+  "activeWeek": 1,
+  "period": {
+    "from": "2026-02-14",
+    "to": "2026-03-13"
+  }
+}
