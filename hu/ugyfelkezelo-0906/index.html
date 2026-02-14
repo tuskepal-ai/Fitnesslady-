@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FitnessLady — Admin belépés</title>
+  <link rel="stylesheet" href="./admin.css" />
+</head>
+<body class="admin-bg">
+  <main class="admin-wrap">
+    <section class="card glass">
+      <div class="card-head">
+        <div class="brand">
+          <span class="dot"></span>
+          <div>
+            <div class="brand-title">FitnessLady</div>
+            <div class="brand-sub">Admin belépés</div>
+          </div>
+        </div>
+        <div class="tag">Védett felület</div>
+      </div>
+
+      <h1 class="h1">Ügyfélkezelő</h1>
+      <p class="p">
+        Belépés csak admin számára. Ha nem te vagy, zárd be ezt az oldalt.
+      </p>
+
+      <form id="loginForm" class="form" autocomplete="off">
+        <label class="label">
+          Felhasználónév
+          <input class="input" id="username" name="username" placeholder="pl. admin" required />
+        </label>
+
+        <label class="label">
+          Jelszó
+          <input class="input" id="password" name="password" type="password" placeholder="••••••••••" required />
+        </label>
+
+        <div class="row">
+          <button class="btn primary" type="submit">Belépés</button>
+          <button class="btn ghost" type="button" id="helpBtn">Elfelejtetted?</button>
+        </div>
+
+        <div class="hint" id="hint"></div>
+        <div class="error" id="error" aria-live="polite"></div>
+      </form>
+
+      <!-- Opcionális: hash generátor (csak ha ?gen=1 a URL végén) -->
+      <div id="genBox" class="gen hidden">
+        <div class="gen-title">Jelszó hash generátor</div>
+        <p class="p small">Csak neked: írd be az új jelszót, kimásolod a hash-t, és beilleszted az admin-auth.js-be.</p>
+        <label class="label">
+          Új jelszó
+          <input class="input" id="newPass" type="text" placeholder="Új erős jelszó" />
+        </label>
+        <button class="btn" id="genBtn" type="button">Hash generálása</button>
+        <label class="label">
+          SHA-256 hash (ezt másold)
+          <input class="input" id="hashOut" type="text" readonly />
+        </label>
+      </div>
+
+      <div class="footer-note">Tüske web design</div>
+    </section>
+  </main>
+
+  <script src="./admin-auth.js"></script>
+  <script>
+    // Login
+    const form = document.getElementById('loginForm');
+    const err  = document.getElementById('error');
+    const hint = document.getElementById('hint');
+
+    document.getElementById('helpBtn').addEventListener('click', () => {
+      hint.textContent = "Ha nem emlékszel, cseréld le a jelszót az admin-auth.js-ben (hash alapján).";
+      setTimeout(()=> hint.textContent="", 4500);
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      err.textContent = "";
+
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value;
+
+      const ok = await AdminAuth.login(u, p);
+      if(ok){
+        location.href = "./dashboard.html";
+      } else {
+        err.textContent = "Hibás felhasználónév vagy jelszó.";
+      }
+    });
+
+    // Hash generator only if ?gen=1
+    const qs = new URLSearchParams(location.search);
+    if(qs.get('gen') === '1'){
+      document.getElementById('genBox').classList.remove('hidden');
+      document.getElementById('genBtn').addEventListener('click', async () => {
+        const np = document.getElementById('newPass').value;
+        document.getElementById('hashOut').value = await AdminAuth.sha256(np);
+      });
+    }
+  </script>
+</body>
+</html>
