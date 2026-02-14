@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fitness Lady — Saját programom (Demo)</title>
+  <link rel="stylesheet" href="./assets/app.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="glass sidebar">
+      <div class="profile">
+        <div class="avatar" aria-hidden="true"></div>
+        <div>
+          <b id="custName">Betöltés…</b>
+          <span id="custPkg">—</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Oldal menü">
+        <a href="#program" class="is-active"><span class="ico">🏠</span>Főoldal</a>
+        <a href="#program"><span class="ico">👤</span>Saját programom</a>
+        <a href="#etrend"><span class="ico">🥗</span>Étrend</a>
+        <a href="#checkin"><span class="ico">🎯</span>Check-in / Célom</a>
+        <a href="#tech"><span class="ico">🎥</span>Tippek & technika</a>
+        <a href="#fiok"><span class="ico">⚙️</span>Fiókom</a>
+      </nav>
+
+      <small>Demo oldal: nincs valódi login/fizetés. Később Payrexx + védett videó.</small>
+    </aside>
+
+    <main class="glass main" id="program">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>
+          <h1>Saját programom</h1>
+          <p class="sub">Heti edzésterved + 3 személyre szabás slot. (Demo adatból betöltve.)</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button class="btn ghost interactive" id="btnHelp" type="button">ℹ️ Súgó</button>
+          <button class="btn primary interactive" id="btnRenewTop" type="button">Megújítás</button>
+        </div>
+      </div>
+
+      <section class="hero">
+        <div>
+          <h2>Program</h2>
+          <div class="kv">
+            <div><b>Aktív:</b> <span id="range">—</span></div>
+            <div><b>Célod:</b> <span id="goal">—</span></div>
+            <div style="color:var(--muted2)"><b>Státusz:</b> Demo</div>
+          </div>
+        </div>
+        <div class="heroArt" aria-hidden="true"></div>
+      </section>
+
+      <div class="tabs" id="tabs" role="tablist" aria-label="Hetek"></div>
+
+      <div class="sectionHead">
+        <h3>Heti edzésterved</h3>
+        <div class="actions">
+          <button class="btn primary interactive" id="btnRenew" type="button">Megújítás</button>
+          <button class="btn interactive" id="btnUpgrade" type="button">Upgrade</button>
+        </div>
+      </div>
+
+      <div class="grid3" id="weeklyGrid"></div>
+
+      <div class="sectionHead" style="margin-top:16px">
+        <h3>Személyre szabás (3 slot)</h3>
+      </div>
+
+      <div class="grid2" id="slotsGrid"></div>
+    </main>
+
+    <aside class="right">
+      <div class="glass rightBox interactive" id="tech">
+        <h3>Technika tár</h3>
+        <p>Örökre megmarad: technikai tippek és videók (később bővítjük).</p>
+        <button class="btn primary interactive" id="btnTech" type="button">Megnyitás</button>
+      </div>
+
+      <div class="glass rightBox interactive" id="etrend">
+        <h3>Étrend</h3>
+        <p>Most: demo. Később: sablon + személyes megjegyzés, képes receptek.</p>
+        <button class="btn interactive" id="btnDiet" type="button">Megnyitás</button>
+      </div>
+
+      <div class="glass rightBox interactive" id="checkin">
+        <h3>Check-in / Célom</h3>
+        <p>Heti mini visszajelzés + motiváció (demo).</p>
+        <button class="btn interactive" id="btnCheckin" type="button">Megnyitás</button>
+      </div>
+
+      <div class="glass rightBox interactive" id="fiok">
+        <h3>Fiókom</h3>
+        <p>Demo: később jelszócsere, adatkezelés, belépés.</p>
+      </div>
+    </aside>
+  </div>
+
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="glass modal">
+      <div class="modalHead">
+        <h4 id="modalTitle">Ablak</h4>
+        <button class="x interactive" id="close" type="button" aria-label="Bezárás">✕</button>
+      </div>
+      <div class="modalBody" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script type="module" src="./assets/app.js"></script>
+</body>
+</html>
