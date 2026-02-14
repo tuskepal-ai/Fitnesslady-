@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FitnessLady — Admin dashboard</title>
+  <link rel="stylesheet" href="./admin.css" />
+</head>
+<body class="admin-bg">
+  <header class="topbar glass">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="dot"></span>
+        <div>
+          <div class="brand-title">FitnessLady</div>
+          <div class="brand-sub">Admin dashboard</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a class="btn ghost" href="../hu/index.html">Főoldal</a>
+        <button class="btn" id="logoutBtn" type="button">Kijelentkezés</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dash">
+    <section class="grid">
+      <article class="panel glass">
+        <h2 class="h2">Ügyfelek</h2>
+        <p class="p small">Itt fogod látni a Marika / Milan felhasználókat, csomagokat, státuszt, slotokat.</p>
+
+        <div class="table">
+          <div class="tr th">
+            <div>Ügyfél</div><div>Csomag</div><div>Lejárat</div><div>Slotok</div><div>Művelet</div>
+          </div>
+
+          <!-- Demo sorok (később Sheets-ből jön) -->
+          <div class="tr">
+            <div>Marika</div><div>Balance (6 hét)</div><div>2026-03-31</div><div>3/3</div>
+            <div><button class="mini-btn">Megnyit</button></div>
+          </div>
+          <div class="tr">
+            <div>Milan</div><div>Start (4 hét)</div><div>2026-03-10</div><div>2/3</div>
+            <div><button class="mini-btn">Megnyit</button></div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <button class="btn primary" type="button" id="addClientBtn">+ Új ügyfél</button>
+          <button class="btn ghost" type="button" id="syncBtn">Szinkron (később Sheets)</button>
+        </div>
+
+        <div class="hint" id="dashHint"></div>
+      </article>
+
+      <article class="panel glass">
+        <h2 class="h2">Csomaglogika (fix terv)</h2>
+        <ul class="list">
+          <li><span class="check"></span> Start: 4 hét</li>
+          <li><span class="check"></span> Balance: 6 hét • heti 4 videó</li>
+          <li><span class="check"></span> Pro: 12 hét • heti 5 videó</li>
+          <li><span class="check"></span> 3 személyre-szabás slot / ügyfél</li>
+        </ul>
+
+        <div class="divider"></div>
+
+        <h2 class="h2">Gyors linkek</h2>
+        <div class="row">
+          <a class="btn" href="#" onclick="alert('Később: Payrexx/Stripe dashboard link.'); return false;">Fizetések</a>
+          <a class="btn" href="#" onclick="alert('Később: Vimeo / video library.'); return false;">Videók</a>
+          <a class="btn" href="#" onclick="alert('Később: Google Sheets admin.'); return false;">Sheets</a>
+        </div>
+
+        <p class="p small" style="margin-top:10px;">
+          Megjegyzés: ez most “A” védelem. Később átállítható erős “B”-re.
+        </p>
+      </article>
+    </section>
+  </main>
+
+  <script src="./admin-auth.js"></script>
+  <script>
+    // Require login
+    if(!AdminAuth.isLoggedIn()){
+      location.replace("./index.html");
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      AdminAuth.logout();
+      location.replace("./index.html");
+    });
+
+    const hint = document.getElementById('dashHint');
+    document.getElementById('addClientBtn').addEventListener('click', () => {
+      hint.textContent = "Demo: később itt nyílik az 'Új ügyfél' modal (Sheets + Vimeo jogosultság).";
+      setTimeout(()=> hint.textContent="", 4500);
+    });
+
+    document.getElementById('syncBtn').addEventListener('click', () => {
+      hint.textContent = "Demo: később Sheets-ből automatikus betöltés + mentés.";
+      setTimeout(()=> hint.textContent="", 4500);
+    });
+  </script>
+</body>
+</html>
