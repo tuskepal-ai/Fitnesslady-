@@ -1,0 +1,1844 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fitness Lady — Admin</title>
+  <meta name="description" content="FitnessLady admin felület (teszt). Vevők kezelése, csomagok, hozzáférés, slotok, export/import." />
+
+  <style>
+    :root{
+      --bg:#07060b;
+
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.70);
+      --muted2:rgba(255,255,255,.55);
+
+      --pink:#ff4fd8;
+      --pink2:#b14cff;
+      --gold:#ffd38a;
+
+      --radius:22px;
+      --shadow: 0 18px 55px rgba(0,0,0,.55);
+      --max: 1180px;
+
+      --panel: rgba(12,10,18,.62);
+      --panel2: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.10);
+      --stroke2: rgba(255,255,255,.14);
+
+      --ok: rgba(65, 255, 170, .95);
+      --warn: rgba(255, 215, 130, .95);
+      --bad: rgba(255, 88, 122, .95);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 700px at 20% 10%, rgba(255,79,216,.16), transparent 60%),
+        radial-gradient(1100px 700px at 80% 20%, rgba(177,76,255,.14), transparent 60%),
+        radial-gradient(900px 650px at 70% 90%, rgba(255,211,138,.07), transparent 55%),
+        var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    /* Full-page background (optional) */
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image: url("/hero.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: .45;
+      transform: translate3d(0,0,0);
+      backface-visibility: hidden;
+      will-change: transform;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    button{ font:inherit; }
+
+    .container{
+      width: min(var(--max), 92vw);
+      margin: 0 auto;
+    }
+
+    /* ========= Topbar ========= */
+    .topbar{
+      position: fixed;
+      top:0; left:0; right:0;
+      z-index: 50;
+      background: rgba(8,6,12,.62);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .topbar-inner{
+      height: 64px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:900;
+      letter-spacing:.2px;
+      white-space: nowrap;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, #ffd0f6, var(--pink));
+      box-shadow: 0 0 18px rgba(255,79,216,.7);
+      flex: 0 0 auto;
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 750;
+    }
+    .nav a{
+      position: relative;
+      padding: 10px 6px;
+      opacity:.92;
+    }
+    .nav a:hover{ opacity:1; color: var(--text); }
+    .nav a::after{
+      content:"";
+      position:absolute;
+      left: 8px; right: 8px; bottom: 6px;
+      height: 2px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, rgba(255,215,140,0), rgba(255,215,140,.9), rgba(255,215,140,0));
+      transform: scaleX(0);
+      transform-origin: left;
+      opacity: 0;
+      transition: transform .28s ease, opacity .28s ease;
+    }
+    .nav a:hover::after,
+    .nav a.is-active::after{
+      transform: scaleX(1);
+      opacity: 1;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight: 900;
+      white-space: nowrap;
+      cursor:pointer;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .pill:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.20); }
+    .pill.primary{
+      background: linear-gradient(135deg, var(--pink), var(--pink2));
+      border-color: rgba(255,255,255,.18);
+      color:#140813;
+      box-shadow: 0 18px 46px rgba(255,79,216,.20);
+    }
+    .pill.ghost{
+      background: rgba(20,12,26,.55);
+      border-color: rgba(255,255,255,.12);
+      color: var(--text);
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+    }
+
+    .menu-btn{
+      width: 40px; height: 40px; border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--text);
+      display:none;
+      align-items:center; justify-content:center;
+      cursor:pointer;
+    }
+
+    /* ========= Base layout ========= */
+    .page{ padding-top: 64px; min-height: 100vh; }
+
+    .glass{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .interactive{
+      position: relative;
+      overflow: hidden;
+      transition: transform .30s cubic-bezier(.2,.8,.2,1), box-shadow .30s ease, border-color .30s ease;
+      will-change: transform;
+    }
+    .interactive::before{
+      content:"";
+      position:absolute; inset:-3px;
+      border-radius: inherit;
+      background:
+        radial-gradient(700px 240px at 12% 0%, rgba(255,79,216,.32), transparent 55%),
+        radial-gradient(700px 260px at 90% 20%, rgba(177,76,255,.26), transparent 60%);
+      opacity: 0;
+      filter: blur(6px);
+      transition: opacity .30s ease;
+      pointer-events:none;
+    }
+    .interactive:hover,
+    .interactive:focus-visible,
+    .interactive.is-active{
+      transform: translateY(-6px);
+      border-color: rgba(255,255,255,.16);
+      box-shadow: 0 22px 70px rgba(0,0,0,.55);
+    }
+    .interactive:hover::before,
+    .interactive:focus-visible::before,
+    .interactive.is-active::before{ opacity: 1; }
+
+    .hero{
+      padding: clamp(22px, 4.8vw, 44px) 0 12px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 16px;
+      align-items:start;
+    }
+    .kicker{
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      font-size: 13px;
+      width: fit-content;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      font-weight: 900;
+    }
+    .h1{
+      margin: 14px 0 10px;
+      font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+      font-weight: 750;
+      line-height: 1.06;
+      letter-spacing: -.7px;
+      font-size: clamp(28px, 3.6vw, 46px);
+      text-shadow: 0 10px 40px rgba(0,0,0,.55);
+    }
+    .lead{
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+      max-width: 80ch;
+      text-shadow: 0 10px 30px rgba(0,0,0,.45);
+    }
+
+    .card{ padding: 18px; }
+    .title-row{
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .title{
+      margin:0;
+      font-size: 16px;
+      font-weight: 950;
+      letter-spacing:.2px;
+    }
+    .tag{
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.07);
+      color: var(--muted);
+      white-space: nowrap;
+      font-weight: 900;
+    }
+    .tag.ok{ color: #0b1b12; background: linear-gradient(135deg, rgba(65,255,170,.92), rgba(160,255,215,.78)); border-color: rgba(255,255,255,.18); }
+    .tag.warn{ color: #221606; background: linear-gradient(135deg, rgba(255,215,130,.92), rgba(255,160,120,.78)); border-color: rgba(255,255,255,.18); }
+    .tag.bad{ color: #25040d; background: linear-gradient(135deg, rgba(255,88,122,.92), rgba(255,140,190,.78)); border-color: rgba(255,255,255,.18); }
+
+    .small{ margin:0; color: var(--muted); font-size: 13.5px; line-height: 1.6; }
+
+    .meta-row{
+      display:flex; flex-wrap:wrap;
+      gap: 10px;
+      margin-top: 10px;
+      color: var(--muted2);
+      font-size: 13px;
+    }
+    .meta-pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      white-space: nowrap;
+    }
+
+    .section{
+      padding: clamp(18px, 4.5vw, 38px) 0;
+    }
+    .section-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .section-title{
+      margin:0;
+      font-family: ui-serif, Georgia, serif;
+      font-size: clamp(22px, 2.6vw, 32px);
+      letter-spacing: -.4px;
+    }
+    .section-sub{
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+      max-width: 82ch;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 16px;
+      align-items:start;
+    }
+
+    .row{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .input, .select, .textarea{
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color: var(--text);
+      outline: none;
+    }
+    .textarea{ resize: vertical; min-height: 92px; }
+    .label{
+      display:grid;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .label span{
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing:.1px;
+    }
+    .grid-2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .table{
+      width:100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.16);
+    }
+    .table th, .table td{
+      padding: 10px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      text-align:left;
+      font-size: 13px;
+      color: rgba(255,255,255,.86);
+      vertical-align: top;
+    }
+    .table th{
+      color: rgba(255,255,255,.78);
+      font-weight: 950;
+      letter-spacing:.15px;
+      background: rgba(255,255,255,.04);
+    }
+    .table tr:hover td{
+      background: rgba(255,255,255,.03);
+    }
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12.5px;
+      color: rgba(255,255,255,.78);
+    }
+
+    .hint{
+      margin-top: 10px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.75);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.86);
+      font-size: 12px;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .divider{
+      height:1px;
+      background: rgba(255,255,255,.08);
+      margin: 14px 0;
+    }
+
+    /* ========= Modal ========= */
+    .modal-overlay{
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      background: rgba(0,0,0,.60);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+    }
+    .modal-overlay.is-open{ display:flex; }
+    .modal{
+      width: min(980px, 94vw);
+      max-height: min(82vh, 760px);
+      border-radius: var(--radius);
+      overflow:hidden;
+      position: relative;
+    }
+    .modal-header{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(10,8,14,.55);
+    }
+    .modal-title{
+      margin:0;
+      font-family: ui-serif, Georgia, serif;
+      font-size: 18px;
+      letter-spacing: -.2px;
+    }
+    .modal-close{
+      width: 40px; height: 40px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.9);
+      cursor: pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .modal-body{
+      padding: 16px;
+      overflow:auto;
+      background: rgba(7,6,11,.40);
+    }
+    body.modal-lock{ overflow:hidden; touch-action:none; }
+
+    /* ========= Performance ========= */
+    body.is-scrolling .interactive::before{ opacity:0 !important; }
+    body.is-scrolling .interactive{ transition:none !important; }
+    body.is-scrolling .glass{ box-shadow: 0 10px 30px rgba(0,0,0,.38) !important; }
+    body.is-scrolling .topbar{
+      backdrop-filter:none !important;
+      -webkit-backdrop-filter:none !important;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      html{ scroll-behavior:auto; }
+      .interactive, .pill{ transition:none; }
+    }
+
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .layout{ grid-template-columns: 1fr; }
+      .menu-btn{ display:inline-flex; }
+      .nav{ display:none; }
+      .grid-2{ grid-template-columns: 1fr; }
+    }
+
+    /* Desktop: blur off for smoothness */
+    @media (min-width: 980px){
+      .topbar{
+        backdrop-filter:none;
+        -webkit-backdrop-filter:none;
+        background: rgba(8,6,12,.80);
+      }
+      body::before{ transform:none; will-change:auto; }
+    }
+
+    footer{
+      padding: 18px 0 60px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      background: rgba(10,8,14,.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .footer-row{
+      display:flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: rgba(255,255,255,.70);
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="#" onclick="return false;" aria-label="Fitness Lady Admin">
+        <span class="dot"></span>
+        <span>Fitness Lady — Admin</span>
+      </a>
+
+      <nav class="nav" aria-label="Admin menü">
+        <a href="#customers">Vevők</a>
+        <a href="#editor">Szerkesztő</a>
+        <a href="#export">Export/Import</a>
+        <a href="#help">Segítség</a>
+      </nav>
+
+      <div class="row">
+        <button class="menu-btn" id="menuBtn" aria-label="Menü">☰</button>
+        <a class="pill ghost" href="/hu/" target="_blank" rel="noopener">Főoldal</a>
+        <a class="pill ghost" href="/hu/app/" target="_blank" rel="noopener">Vevő oldal</a>
+        <button class="pill primary" id="openInfoBtn" type="button">Info</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="page">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="glass card interactive">
+            <div class="kicker">🔒 Admin felület • v1 (statikus teszt)</div>
+            <h1 class="h1">Vevők, csomagok, slotok, hozzáférés — egy helyen.</h1>
+            <p class="lead">
+              Ez a v1 admin UI <b>backend nélkül</b> fut: mentés <b>localStorage</b>-ba + <b>JSON export/import</b>.
+              Később ugyanez a felület ráköthető az admin API-ra (PHP/SQLite).
+            </p>
+
+            <div class="meta-row">
+              <div class="meta-pill">📦 Csomagok: <b>Start 4h</b> • <b>Balance 6h (heti 4 video)</b> • <b>Pro 12h (heti 5 video)</b></div>
+              <div class="meta-pill">🎯 Slotok: <b>3</b> (cserélhető)</div>
+              <div class="meta-pill">🧠 Örök: <b>Technika</b> (mindig elérhető)</div>
+            </div>
+          </div>
+
+          <div class="glass card interactive">
+            <div class="title-row">
+              <h2 class="title">Rendszer állapot</h2>
+              <span class="tag" id="sysTag">DEMO</span>
+            </div>
+            <p class="small">
+              Mentés helye: <b>csak a te böngésződben</b> (localStorage). Export után tudod feltölteni / átküldeni.
+            </p>
+
+            <div class="divider"></div>
+
+            <div class="row">
+              <span class="badge">✅ UI kész</span>
+              <span class="badge">📤 Export</span>
+              <span class="badge">📥 Import</span>
+              <span class="badge">🔐 Backend: később</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="row">
+              <button class="pill primary" id="newCustomerQuickBtn" type="button">+ Új vevő</button>
+              <button class="pill" id="backupBtn" type="button">Backup export</button>
+              <button class="pill" id="resetBtn" type="button">Reset (csak demo)</button>
+            </div>
+
+            <div class="hint">
+              <b>Biztonság:</b> ezt az admin oldalt a szerveren védd <b>HTTP Basic Auth</b>-tal is (Hostpoint “directory protection”),
+              így már a belépés előtt jelszót kér.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VEVO LISTA -->
+    <section id="customers" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Vevők</h2>
+            <p class="section-sub">
+              Keresés email alapján, státusz, csomag, lejárat. Kattintásra megnyílik a szerkesztő.
+            </p>
+          </div>
+          <div class="row">
+            <input class="input" id="searchInput" placeholder="Keresés: email / név" style="max-width:320px;">
+            <button class="pill" id="createCustomerBtn" type="button">+ Új vevő</button>
+          </div>
+        </div>
+
+        <div class="glass card interactive">
+          <table class="table" aria-label="Vevők táblázat">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Név</th>
+                <th>Csomag</th>
+                <th>Státusz</th>
+                <th>Lejárat</th>
+                <th>Heti videó</th>
+                <th>Slotok</th>
+                <th style="width:150px;">Művelet</th>
+              </tr>
+            </thead>
+            <tbody id="customersTbody"></tbody>
+          </table>
+          <div class="hint">
+            <b>Tipp:</b> ha a vevő “lejárt”, a heti videók “stop”, de az <b>Örök technika</b> marad.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SZERKESZTO -->
+    <section id="editor" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Szerkesztő</h2>
+            <p class="section-sub">
+              Itt állítod a csomagot, lejáratot, heti videókat és a 3 személyre szabás slotot (csere lista).
+            </p>
+          </div>
+          <div class="row">
+            <span class="badge" id="selectedBadge">Nincs kiválasztva</span>
+            <button class="pill primary" id="saveBtn" type="button">Mentés</button>
+            <button class="pill" id="exportUserBtn" type="button">user.json export</button>
+          </div>
+        </div>
+
+        <div class="layout">
+          <!-- Left -->
+          <div class="glass card interactive">
+            <div class="title-row">
+              <h3 class="title">Alap adatok</h3>
+              <span class="tag" id="statusPill">—</span>
+            </div>
+
+            <div class="label">
+              <span>Email (azonosító)</span>
+              <input class="input" id="emailInput" placeholder="pl. vevo@email.com">
+            </div>
+
+            <div class="label">
+              <span>Név</span>
+              <input class="input" id="nameInput" placeholder="pl. Kiss Anna">
+            </div>
+
+            <div class="grid-2">
+              <div class="label">
+                <span>Csomag</span>
+                <select class="select" id="packageSelect">
+                  <option value="start">Start — 4 hét</option>
+                  <option value="balance">Balance — 6 hét (heti 4 video)</option>
+                  <option value="pro">Pro — 12 hét (heti 5 video)</option>
+                </select>
+              </div>
+
+              <div class="label">
+                <span>Státusz</span>
+                <select class="select" id="statusSelect">
+                  <option value="active">Aktív</option>
+                  <option value="paused">Szünet</option>
+                  <option value="expired">Lejárt</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="label">
+                <span>Lejárat (dátum)</span>
+                <input class="input" id="expiryInput" type="date">
+              </div>
+
+              <div class="label">
+                <span>Heti videók</span>
+                <select class="select" id="weeklySelect">
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4" selected>4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="label">
+                <span>Jelszó (teszt)</span>
+                <input class="input" id="passwordInput" placeholder="(később hash + backend)">
+              </div>
+              <div class="label">
+                <span>&nbsp;</span>
+                <button class="pill" id="genPassBtn" type="button">Jelszó generálás</button>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="title-row">
+              <h3 class="title">Konzultáció / Megjegyzés</h3>
+              <span class="tag">belső</span>
+            </div>
+            <textarea class="textarea" id="adminNoteInput" placeholder="Pl. cél: formásodás + erő, térd érzékeny, heti 4 edzés. Slot 1: guggolás csere..."></textarea>
+
+            <div class="divider"></div>
+
+            <div class="row">
+              <button class="pill primary" id="renewBtn" type="button">Megújítás</button>
+              <button class="pill" id="upgradeBtn" type="button">Upgrade</button>
+              <button class="pill" id="deleteBtn" type="button">Törlés</button>
+            </div>
+
+            <div class="hint">
+              <b>Megújítás:</b> új lejáratot ad (csomag szerint).<br>
+              <b>Upgrade:</b> Start → Balance → Pro (és heti videó automatikusan).
+            </div>
+          </div>
+
+          <!-- Right -->
+          <div class="glass card interactive">
+            <div class="title-row">
+              <h3 class="title">Program (videók + slotok)</h3>
+              <span class="tag">3 slot</span>
+            </div>
+
+            <div class="label">
+              <span>Heti fókusz</span>
+              <input class="input" id="weeklyFocusInput" placeholder="Pl. technika + stabil tempó">
+            </div>
+            <div class="label">
+              <span>Következő edzés</span>
+              <input class="input" id="nextWorkoutInput" placeholder="Pl. 2. edzés — alsótest (25–35 perc)">
+            </div>
+            <div class="label">
+              <span>Motivációs sor</span>
+              <input class="input" id="motivationInput" placeholder="Pl. Ma csak jelenj meg. A rendszer dolgozik.">
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="title-row">
+              <h3 class="title">Videó lista (heti)</h3>
+              <span class="tag" id="videosCountTag">—</span>
+            </div>
+
+            <div class="hint">
+              Írj be <b>címet</b> és <b>leírást</b>. A v1-ben még nincs valódi videó link.
+              Később ide jön a védett lejátszó azonosító (Vimeo/Mux/Cloudflare Stream).
+            </div>
+
+            <div id="videosWrap"></div>
+
+            <div class="divider"></div>
+
+            <div class="title-row">
+              <h3 class="title">Személyre szabás slotok</h3>
+              <span class="tag">csere</span>
+            </div>
+
+            <div class="hint">
+              Slot = amit te hetente cserélhetsz a vevőnek, a többire nincs rálátása.
+            </div>
+
+            <div class="grid-2">
+              <div class="label">
+                <span>Slot 1</span>
+                <input class="input" id="slot1Input" placeholder="Pl. guggolás helyett box guggolás">
+              </div>
+              <div class="label">
+                <span>Slot 2</span>
+                <input class="input" id="slot2Input" placeholder="Pl. terhelés csökkentés / regresszió">
+              </div>
+              <div class="label">
+                <span>Slot 3</span>
+                <input class="input" id="slot3Input" placeholder="Pl. mobilitás / core kiegészítés">
+              </div>
+              <div class="label">
+                <span>Örök technika hozzáférés</span>
+                <select class="select" id="eternalSelect">
+                  <option value="yes" selected>Igen (mindig)</option>
+                  <option value="no">Nem</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="row">
+              <button class="pill primary" id="previewUserBtn" type="button">Vevő JSON előnézet</button>
+              <button class="pill" id="copyUserJsonBtn" type="button">Másolás vágólapra</button>
+            </div>
+
+            <div class="hint mono" id="jsonHint">
+              user.json export: ezt fogod majd betenni a vevő rendszerbe (később automata API).
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPORT / IMPORT -->
+    <section id="export" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Export / Import</h2>
+            <p class="section-sub">
+              Teljes admin adatbázis (demo) exportálása / visszatöltése. Ez a “backend nélküli” mentésed.
+            </p>
+          </div>
+          <div class="row">
+            <button class="pill primary" id="exportAllBtn" type="button">Teljes export</button>
+            <label class="pill" style="cursor:pointer;">
+              Import JSON
+              <input id="importFile" type="file" accept="application/json" style="display:none;">
+            </label>
+          </div>
+        </div>
+
+        <div class="glass card interactive">
+          <div class="title-row">
+            <h3 class="title">Admin DB JSON</h3>
+            <span class="tag">backup</span>
+          </div>
+          <textarea class="textarea mono" id="dbPreview" readonly></textarea>
+
+          <div class="row" style="margin-top:10px;">
+            <button class="pill" id="copyDbBtn" type="button">Másolás</button>
+            <button class="pill" id="downloadDbBtn" type="button">Letöltés</button>
+          </div>
+
+          <div class="hint">
+            <b>Figyelem:</b> a “valódi B” (PHP/SQLite) esetén ez a rész maradhat backupnak, de mentés már a szerveren történik.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HELP -->
+    <section id="help" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Segítség</h2>
+            <p class="section-sub">Mit kell majd összekötni, hogy éles B legyen (fizetés → user aktiválás → védett videók).</p>
+          </div>
+          <div class="row">
+            <button class="pill" id="openRoadmapBtn" type="button">Roadmap</button>
+            <button class="pill primary" id="openSecurityBtn" type="button">Biztonság</button>
+          </div>
+        </div>
+
+        <div class="glass card interactive">
+          <div class="title-row">
+            <h3 class="title">B élesítés checklist</h3>
+            <span class="tag">következő</span>
+          </div>
+          <ul style="margin:0; padding-left:18px; color:rgba(255,255,255,.80); line-height:1.7; font-size:13.5px;">
+            <li><b>admin.fitnesslady.ch</b> védése HTTP Basic Auth-tal (Hostpoint Directory protection).</li>
+            <li><b>PHP + SQLite</b> API: login, session cookie, users CRUD, entitlement.</li>
+            <li><b>Payrexx webhook</b>: fizetés után user aktiválás + csomag + lejárat.</li>
+            <li><b>Védett videó</b>: Vimeo/Mux/Cloudflare Stream signed playback token.</li>
+            <li>Vevő oldalon: csak belépve, csak saját csomag videók + örök technika.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container footer-row">
+        <div>© <span id="y"></span> Fitness Lady</div>
+        <div>Tüske web design</div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="glass modal" role="document">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Info</h2>
+        <button class="modal-close interactive" id="modalCloseBtn" type="button" aria-label="Bezárás">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    // ====== util ======
+    const $ = (sel, root=document) => root.querySelector(sel);
+    const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+    const nowYMD = () => new Date().toISOString().slice(0,10);
+
+    function escapeHtml(s){
+      return String(s ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function downloadText(filename, text){
+      const blob = new Blob([text], {type:"application/json;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function copyToClipboard(text){
+      return navigator.clipboard?.writeText(text).catch(()=> {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      });
+    }
+
+    function randomPassword(len=10){
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";
+      let out = "";
+      for(let i=0;i<len;i++) out += chars[Math.floor(Math.random()*chars.length)];
+      return out;
+    }
+
+    // ====== scroll perf ======
+    (() => {
+      let t = null;
+      const mark = () => {
+        if(!document.body.classList.contains('is-scrolling')) document.body.classList.add('is-scrolling');
+        clearTimeout(t);
+        t = setTimeout(() => document.body.classList.remove('is-scrolling'), 180);
+      };
+      window.addEventListener('scroll', mark, { passive: true });
+      window.addEventListener('wheel', mark, { passive: true });
+    })();
+
+    // ====== modal ======
+    const modalOverlay = $("#modalOverlay");
+    const modalCloseBtn = $("#modalCloseBtn");
+    const modalTitle = $("#modalTitle");
+    const modalBody = $("#modalBody");
+    let lastFocus = null;
+
+    function openModal(title, html){
+      lastFocus = document.activeElement;
+      modalTitle.textContent = title;
+      modalBody.innerHTML = html;
+      modalOverlay.classList.add('is-open');
+      modalOverlay.setAttribute('aria-hidden','false');
+      document.body.classList.add('modal-lock');
+      modalCloseBtn.focus({preventScroll:true});
+    }
+    function closeModal(){
+      modalOverlay.classList.remove('is-open');
+      modalOverlay.setAttribute('aria-hidden','true');
+      document.body.classList.remove('modal-lock');
+      if(lastFocus?.focus) lastFocus.focus({preventScroll:true});
+    }
+    modalCloseBtn.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e)=>{ if(e.target===modalOverlay) closeModal(); });
+    document.addEventListener('keydown', (e)=>{ if(modalOverlay.classList.contains('is-open') && e.key==='Escape') closeModal(); });
+
+    // ====== year ======
+    $("#y").textContent = new Date().getFullYear();
+
+    // ====== data model ======
+    const STORAGE_KEY = "fitnesslady_admin_db_v1";
+
+    const packages = {
+      start:   { key:"start",   name:"Start",   weeks:4,  weeklyVideos:2 },
+      balance: { key:"balance", name:"Balance", weeks:6,  weeklyVideos:4 },
+      pro:     { key:"pro",     name:"Pro",     weeks:12, weeklyVideos:5 },
+    };
+
+    function defaultVideos(count){
+      const base = [
+        { title:"Edzés 1 — Teljes test (alap)", sub:"30–40 perc • tempó + technika", level:"A" },
+        { title:"Edzés 2 — Alsótest (formálás)", sub:"25–35 perc • farizom fókusz", level:"B" },
+        { title:"Edzés 3 — Felsőtest (tartás)", sub:"20–30 perc • váll + hát", level:"A" },
+        { title:"Edzés 4 — Core + mobilitás", sub:"15–20 perc • stabilitás", level:"C" },
+        { title:"Edzés 5 — Extra (progresszió)", sub:"25–35 perc • haladó", level:"B" }
+      ];
+      return base.slice(0, Math.max(1, Math.min(5, count))).map(v=>({...v}));
+    }
+
+    function makeCustomer(email=""){
+      const pkg = packages.balance;
+      const expiry = new Date();
+      expiry.setDate(expiry.getDate() + (pkg.weeks * 7));
+      return {
+        id: crypto?.randomUUID?.() || ("id_" + Math.random().toString(16).slice(2)),
+        email: email.trim().toLowerCase(),
+        name: "",
+        status: "active",
+        packageKey: pkg.key,
+        weeklyVideos: pkg.weeklyVideos,
+        expiryYMD: expiry.toISOString().slice(0,10),
+        password: "",
+        adminNote: "",
+        weeklyFocus: "Tökéletes alapok: technika + stabil tempó.",
+        nextWorkout: "2. edzés — alsótest (25–35 perc)",
+        motivation: "Kis lépések. Nagy változás. Ma csak jelenj meg.",
+        videos: defaultVideos(pkg.weeklyVideos),
+        slots: ["", "", ""],
+        eternalTechnique: "yes",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+    }
+
+    function loadDB(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return { version:1, updatedAt:new Date().toISOString(), customers: [] };
+        const db = JSON.parse(raw);
+        if(!db?.customers) throw new Error("bad db");
+        return db;
+      }catch{
+        return { version:1, updatedAt:new Date().toISOString(), customers: [] };
+      }
+    }
+
+    function saveDB(){
+      db.updatedAt = new Date().toISOString();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(db, null, 2));
+      renderDBPreview();
+      renderCustomersTable();
+      updateSysTag();
+    }
+
+    function updateSysTag(){
+      const count = db.customers.length;
+      $("#sysTag").textContent = count ? `DEMO • ${count} vevő` : "DEMO";
+    }
+
+    let db = loadDB();
+
+    // ====== rendering: customers table ======
+    const tbody = $("#customersTbody");
+    const searchInput = $("#searchInput");
+
+    function statusBadge(status, expiryYMD){
+      const today = nowYMD();
+      let s = status;
+      if(s === "active" && expiryYMD && expiryYMD < today) s = "expired";
+
+      if(s === "active") return `<span class="tag ok">Aktív</span>`;
+      if(s === "paused") return `<span class="tag warn">Szünet</span>`;
+      return `<span class="tag bad">Lejárt</span>`;
+    }
+
+    function pkgLabel(c){
+      const p = packages[c.packageKey] || packages.balance;
+      return `${p.name} (${p.weeks} hét)`;
+    }
+
+    function renderCustomersTable(){
+      const q = (searchInput.value || "").trim().toLowerCase();
+      const rows = db.customers
+        .filter(c => {
+          if(!q) return true;
+          return (c.email||"").includes(q) || (c.name||"").toLowerCase().includes(q);
+        })
+        .sort((a,b)=> (a.email||"").localeCompare(b.email||""));
+
+      tbody.innerHTML = rows.map(c => {
+        const p = packages[c.packageKey] || packages.balance;
+        const status = statusBadge(c.status, c.expiryYMD);
+        const slots = (c.slots||[]).filter(Boolean).length + "/3";
+        return `
+          <tr data-id="${escapeHtml(c.id)}">
+            <td class="mono">${escapeHtml(c.email || "—")}</td>
+            <td>${escapeHtml(c.name || "—")}</td>
+            <td>${escapeHtml(p.name)}</td>
+            <td>${status}</td>
+            <td class="mono">${escapeHtml(c.expiryYMD || "—")}</td>
+            <td>${escapeHtml(String(c.weeklyVideos ?? p.weeklyVideos))}</td>
+            <td>${escapeHtml(slots)}</td>
+            <td>
+              <div class="row">
+                <button class="pill primary" data-action="edit">Szerkeszt</button>
+                <button class="pill" data-action="export">user.json</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("") || `
+        <tr><td colspan="8" style="color:rgba(255,255,255,.65);">Nincs találat.</td></tr>
+      `;
+    }
+
+    searchInput.addEventListener('input', renderCustomersTable);
+
+    // ====== editor bindings ======
+    const selectedBadge = $("#selectedBadge");
+    const statusPill = $("#statusPill");
+
+    const emailInput = $("#emailInput");
+    const nameInput = $("#nameInput");
+    const packageSelect = $("#packageSelect");
+    const statusSelect = $("#statusSelect");
+    const expiryInput = $("#expiryInput");
+    const weeklySelect = $("#weeklySelect");
+    const passwordInput = $("#passwordInput");
+    const adminNoteInput = $("#adminNoteInput");
+
+    const weeklyFocusInput = $("#weeklyFocusInput");
+    const nextWorkoutInput = $("#nextWorkoutInput");
+    const motivationInput = $("#motivationInput");
+
+    const slot1Input = $("#slot1Input");
+    const slot2Input = $("#slot2Input");
+    const slot3Input = $("#slot3Input");
+    const eternalSelect = $("#eternalSelect");
+
+    const videosWrap = $("#videosWrap");
+    const videosCountTag = $("#videosCountTag");
+
+    let selectedId = null;
+
+    function getSelected(){
+      return db.customers.find(c => c.id === selectedId) || null;
+    }
+
+    function computeStatusForUI(c){
+      const today = nowYMD();
+      let s = c.status;
+      if(s === "active" && c.expiryYMD && c.expiryYMD < today) s = "expired";
+      return s;
+    }
+
+    function setStatusPill(s){
+      if(s === "active"){
+        statusPill.className = "tag ok";
+        statusPill.textContent = "Aktív";
+      } else if(s === "paused"){
+        statusPill.className = "tag warn";
+        statusPill.textContent = "Szünet";
+      } else {
+        statusPill.className = "tag bad";
+        statusPill.textContent = "Lejárt";
+      }
+    }
+
+    function renderVideosEditor(c){
+      const count = Number(c.weeklyVideos || 0) || 0;
+      videosCountTag.textContent = `Heti ${count} videó`;
+      const arr = c.videos || [];
+      // Ensure array length
+      while(arr.length < count) arr.push({ title:"", sub:"", level:"" });
+      while(arr.length > count) arr.pop();
+      c.videos = arr;
+
+      videosWrap.innerHTML = arr.map((v, i) => `
+        <div class="glass" style="padding:12px; border-radius:18px; border:1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.03); margin-top:10px;">
+          <div class="row" style="justify-content:space-between;">
+            <div class="badge">🎬 Videó ${i+1}</div>
+            <div class="row">
+              <span class="badge">Szint</span>
+              <input class="input mono" data-vfield="level" data-idx="${i}" value="${escapeHtml(v.level||"")}" placeholder="A / B / C" style="max-width:110px;">
+            </div>
+          </div>
+
+          <div class="label">
+            <span>Cím</span>
+            <input class="input" data-vfield="title" data-idx="${i}" value="${escapeHtml(v.title||"")}" placeholder="Pl. Edzés 2 — Alsótest (formálás)">
+          </div>
+
+          <div class="label">
+            <span>Leírás</span>
+            <input class="input" data-vfield="sub" data-idx="${i}" value="${escapeHtml(v.sub||"")}" placeholder="Pl. 25–35 perc • farizom fókusz">
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function fillEditor(c){
+      selectedId = c?.id || null;
+      if(!c){
+        selectedBadge.textContent = "Nincs kiválasztva";
+        setStatusPill("expired");
+        return;
+      }
+
+      selectedBadge.textContent = `Kiválasztva: ${c.email || c.name || c.id}`;
+      const s = computeStatusForUI(c);
+      setStatusPill(s);
+
+      emailInput.value = c.email || "";
+      nameInput.value = c.name || "";
+      packageSelect.value = c.packageKey || "balance";
+      statusSelect.value = c.status || "active";
+      expiryInput.value = c.expiryYMD || "";
+      weeklySelect.value = String(c.weeklyVideos ?? packages[c.packageKey]?.weeklyVideos ?? 4);
+      passwordInput.value = c.password || "";
+      adminNoteInput.value = c.adminNote || "";
+
+      weeklyFocusInput.value = c.weeklyFocus || "";
+      nextWorkoutInput.value = c.nextWorkout || "";
+      motivationInput.value = c.motivation || "";
+
+      slot1Input.value = c.slots?.[0] || "";
+      slot2Input.value = c.slots?.[1] || "";
+      slot3Input.value = c.slots?.[2] || "";
+      eternalSelect.value = c.eternalTechnique || "yes";
+
+      renderVideosEditor(c);
+    }
+
+    function sanitizeEmail(s){
+      return String(s||"").trim().toLowerCase();
+    }
+
+    function applyPackageDefaults(c){
+      const p = packages[c.packageKey] || packages.balance;
+      // If weeklySelect not explicitly set, align with package default:
+      c.weeklyVideos = Number(c.weeklyVideos || p.weeklyVideos);
+      // Ensure within 1..5
+      c.weeklyVideos = Math.max(1, Math.min(5, c.weeklyVideos));
+      // videos array adjust
+      c.videos = (c.videos || []);
+      while(c.videos.length < c.weeklyVideos) c.videos.push({ title:"", sub:"", level:"" });
+      while(c.videos.length > c.weeklyVideos) c.videos.pop();
+    }
+
+    function weeksForPackage(key){
+      return (packages[key] || packages.balance).weeks;
+    }
+
+    function renewCustomer(c){
+      const weeks = weeksForPackage(c.packageKey);
+      const d = new Date();
+      d.setDate(d.getDate() + weeks*7);
+      c.expiryYMD = d.toISOString().slice(0,10);
+      c.status = "active";
+      c.updatedAt = new Date().toISOString();
+    }
+
+    function upgradeCustomer(c){
+      const order = ["start", "balance", "pro"];
+      const idx = Math.max(0, order.indexOf(c.packageKey));
+      const next = order[Math.min(order.length-1, idx+1)];
+      c.packageKey = next;
+      const p = packages[next];
+      c.weeklyVideos = p.weeklyVideos;
+      renewCustomer(c);
+      applyPackageDefaults(c);
+      c.updatedAt = new Date().toISOString();
+    }
+
+    function saveFromEditor(){
+      const c = getSelected();
+      if(!c){
+        openModal("Hiba", `<p>Nincs kiválasztva vevő. Válassz a listából vagy hozz létre újat.</p>`);
+        return;
+      }
+
+      const newEmail = sanitizeEmail(emailInput.value);
+      if(!newEmail){
+        openModal("Hiba", `<p><b>Email kötelező.</b> Ez lesz az azonosító.</p>`);
+        return;
+      }
+
+      // unique email check (except self)
+      const clash = db.customers.find(x => x.email === newEmail && x.id !== c.id);
+      if(clash){
+        openModal("Hiba", `<p>Ez az email már létezik: <b>${escapeHtml(newEmail)}</b></p>`);
+        return;
+      }
+
+      c.email = newEmail;
+      c.name = nameInput.value.trim();
+      c.packageKey = packageSelect.value;
+      c.status = statusSelect.value;
+      c.expiryYMD = expiryInput.value || nowYMD();
+      c.weeklyVideos = Number(weeklySelect.value || 4);
+      c.password = passwordInput.value;
+      c.adminNote = adminNoteInput.value;
+
+      c.weeklyFocus = weeklyFocusInput.value.trim();
+      c.nextWorkout = nextWorkoutInput.value.trim();
+      c.motivation = motivationInput.value.trim();
+
+      c.slots = [
+        slot1Input.value.trim(),
+        slot2Input.value.trim(),
+        slot3Input.value.trim(),
+      ];
+      c.eternalTechnique = eternalSelect.value;
+
+      // video fields from UI
+      const fields = $$("[data-vfield]", videosWrap);
+      for(const el of fields){
+        const idx = Number(el.getAttribute("data-idx"));
+        const field = el.getAttribute("data-vfield");
+        c.videos[idx] = c.videos[idx] || { title:"", sub:"", level:"" };
+        c.videos[idx][field] = el.value;
+      }
+
+      applyPackageDefaults(c);
+      c.updatedAt = new Date().toISOString();
+
+      fillEditor(c);
+      saveDB();
+
+      openModal("Mentve", `
+        <p><b>Oké.</b> Mentve localStorage-ba.</p>
+        <p class="mono">Email: ${escapeHtml(c.email)} • Csomag: ${escapeHtml(packages[c.packageKey]?.name)} • Lejárat: ${escapeHtml(c.expiryYMD)}</p>
+      `);
+    }
+
+    // ====== user.json builder (for vevő oldal) ======
+    function buildUserJson(c){
+      const p = packages[c.packageKey] || packages.balance;
+      const statusUI = computeStatusForUI(c);
+
+      return {
+        version: 1,
+        user: {
+          email: c.email,
+          name: c.name || "",
+          status: statusUI, // active/paused/expired
+          package: p.name,
+          packageKey: c.packageKey,
+          durationWeeks: p.weeks,
+          weeklyVideos: Number(c.weeklyVideos ?? p.weeklyVideos),
+          expiryYMD: c.expiryYMD,
+          eternalTechnique: c.eternalTechnique === "yes",
+        },
+        program: {
+          weeklyFocus: c.weeklyFocus || "",
+          nextWorkout: c.nextWorkout || "",
+          motivation: c.motivation || "",
+          slots: {
+            slot1: c.slots?.[0] || "",
+            slot2: c.slots?.[1] || "",
+            slot3: c.slots?.[2] || "",
+          },
+          videos: (c.videos || []).slice(0, Number(c.weeklyVideos || p.weeklyVideos)).map(v => ({
+            title: v.title || "",
+            sub: v.sub || "",
+            level: v.level || ""
+          })),
+          // NOTE: later add protectedPlaybackId, etc.
+        },
+        admin: {
+          note: c.adminNote || "",
+          updatedAt: c.updatedAt,
+        }
+      };
+    }
+
+    function exportUserJson(c){
+      const json = buildUserJson(c);
+      const safeEmail = (c.email || "user").replaceAll(/[^a-z0-9\-_\.@]/g, "_");
+      downloadText(`user_${safeEmail}.json`, JSON.stringify(json, null, 2));
+    }
+
+    // ====== db preview ======
+    const dbPreview = $("#dbPreview");
+    function renderDBPreview(){
+      dbPreview.value = JSON.stringify(db, null, 2);
+    }
+
+    // ====== events ======
+    $("#saveBtn").addEventListener('click', saveFromEditor);
+    $("#exportUserBtn").addEventListener('click', () => {
+      const c = getSelected();
+      if(!c) return openModal("Hiba", `<p>Nincs kiválasztva vevő.</p>`);
+      exportUserJson(c);
+    });
+
+    $("#previewUserBtn").addEventListener('click', () => {
+      const c = getSelected();
+      if(!c) return openModal("Hiba", `<p>Nincs kiválasztva vevő.</p>`);
+      const json = buildUserJson(c);
+      openModal("Vevő JSON előnézet", `
+        <p class="small">Ezt fogja a vevő oldal beolvasni (később automata API-ból).</p>
+        <pre class="mono" style="white-space:pre-wrap; background: rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.10); padding:12px; border-radius:16px; margin:10px 0 0;">${escapeHtml(JSON.stringify(json, null, 2))}</pre>
+      `);
+    });
+
+    $("#copyUserJsonBtn").addEventListener('click', async () => {
+      const c = getSelected();
+      if(!c) return openModal("Hiba", `<p>Nincs kiválasztva vevő.</p>`);
+      const json = JSON.stringify(buildUserJson(c), null, 2);
+      await copyToClipboard(json);
+      openModal("Másolva", `<p>Vevő JSON a vágólapon.</p>`);
+    });
+
+    $("#genPassBtn").addEventListener('click', () => {
+      passwordInput.value = randomPassword(12);
+      openModal("Jelszó", `<p>Generált jelszó: <b class="mono">${escapeHtml(passwordInput.value)}</b></p><p class="small">Élesben ezt majd hash-elve tároljuk a backendben.</p>`);
+    });
+
+    $("#renewBtn").addEventListener('click', () => {
+      const c = getSelected();
+      if(!c) return openModal("Hiba", `<p>Nincs kiválasztva vevő.</p>`);
+      renewCustomer(c);
+      fillEditor(c);
+      saveDB();
+      openModal("Megújítva", `<p>Új lejárat: <b class="mono">${escapeHtml(c.expiryYMD)}</b></p>`);
+    });
+
+    $("#upgradeBtn").addEventListener('click', () => {
+      const c = getSelected();
+      if(!c) return openModal("Hiba", `<p>Nincs kiválasztva vevő.</p>`);
+      const before = c.packageKey;
+      upgradeCustomer(c);
+      fillEditor(c);
+      saveDB();
+      openModal("Upgrade kész", `<p><b>${escapeHtml(packages[before]?.name)}</b> → <b>${escapeHtml(packages[c.packageKey]?.name)}</b></p>`);
+    });
+
+    $("#deleteBtn").addEventListener('click', () => {
+      const c = getSelected();
+      if(!c) return openModal("Hiba", `<p>Nincs kiválasztva vevő.</p>`);
+      openModal("Törlés", `
+        <p>Biztos törlöd? <b class="mono">${escapeHtml(c.email)}</b></p>
+        <div class="row" style="margin-top:10px;">
+          <button class="pill primary" id="confirmDeleteBtn" type="button">Igen, törlöm</button>
+          <button class="pill" id="cancelDeleteBtn" type="button">Mégse</button>
+        </div>
+      `);
+
+      setTimeout(() => {
+        $("#confirmDeleteBtn")?.addEventListener('click', () => {
+          db.customers = db.customers.filter(x => x.id !== c.id);
+          selectedId = null;
+          saveDB();
+          fillEditor(null);
+          closeModal();
+        });
+        $("#cancelDeleteBtn")?.addEventListener('click', closeModal);
+      }, 0);
+    });
+
+    function createCustomerFlow(prefillEmail=""){
+      const c = makeCustomer(prefillEmail);
+      // if email already exists -> empty email
+      if(prefillEmail){
+        const exists = db.customers.some(x => x.email === sanitizeEmail(prefillEmail));
+        if(exists) c.email = "";
+      }
+      db.customers.push(c);
+      selectedId = c.id;
+      fillEditor(c);
+      saveDB();
+      location.hash = "#editor";
+      openModal("Új vevő", `<p>Vevő létrehozva. Töltsd ki az emailt, majd <b>Mentés</b>.</p>`);
+    }
+
+    $("#createCustomerBtn").addEventListener('click', () => createCustomerFlow(""));
+    $("#newCustomerQuickBtn").addEventListener('click', () => createCustomerFlow(""));
+
+    // Table row actions
+    tbody.addEventListener('click', (e) => {
+      const tr = e.target?.closest('tr[data-id]');
+      if(!tr) return;
+      const id = tr.getAttribute('data-id');
+      const c = db.customers.find(x => x.id === id);
+      if(!c) return;
+
+      const btn = e.target?.closest('button[data-action]');
+      if(!btn){
+        selectedId = c.id;
+        fillEditor(c);
+        location.hash = "#editor";
+        return;
+      }
+
+      const action = btn.getAttribute('data-action');
+      if(action === "edit"){
+        selectedId = c.id;
+        fillEditor(c);
+        location.hash = "#editor";
+      } else if(action === "export"){
+        exportUserJson(c);
+      }
+    });
+
+    // Update weekly defaults when package changed
+    packageSelect.addEventListener('change', () => {
+      const key = packageSelect.value;
+      const p = packages[key] || packages.balance;
+      weeklySelect.value = String(p.weeklyVideos);
+      // If a customer selected, update immediately for editing preview
+      const c = getSelected();
+      if(c){
+        c.packageKey = key;
+        c.weeklyVideos = p.weeklyVideos;
+        applyPackageDefaults(c);
+        fillEditor(c);
+      } else {
+        // render editor videos by reading weeklySelect
+        const temp = makeCustomer("");
+        temp.packageKey = key;
+        temp.weeklyVideos = p.weeklyVideos;
+        renderVideosEditor(temp);
+      }
+    });
+
+    weeklySelect.addEventListener('change', () => {
+      const c = getSelected();
+      const count = Number(weeklySelect.value || 4);
+      if(c){
+        c.weeklyVideos = count;
+        applyPackageDefaults(c);
+        fillEditor(c);
+      } else {
+        const temp = makeCustomer("");
+        temp.weeklyVideos = count;
+        renderVideosEditor(temp);
+      }
+    });
+
+    // Info button
+    $("#openInfoBtn").addEventListener('click', () => {
+      openModal("Info", `
+        <p><b>Ez a v1 admin UI statikus.</b></p>
+        <p>Mentés: <b>localStorage</b>. Export: <b>JSON fájl</b>.</p>
+        <div class="divider"></div>
+        <p class="small"><b>Következő (B éles):</b> PHP + SQLite API + Payrexx webhook + védett videó token.</p>
+      `);
+    });
+
+    // Backup/export buttons
+    function backupExport(){
+      const payload = JSON.stringify(db, null, 2);
+      downloadText(`fitnesslady_admin_db_backup_${nowYMD()}.json`, payload);
+    }
+    $("#backupBtn").addEventListener('click', backupExport);
+
+    $("#exportAllBtn").addEventListener('click', () => {
+      renderDBPreview();
+      openModal("Teljes export", `<p>DB export fájl letöltése indul.</p>`);
+      backupExport();
+    });
+
+    $("#copyDbBtn").addEventListener('click', async () => {
+      await copyToClipboard(dbPreview.value || "");
+      openModal("Másolva", `<p>Admin DB JSON a vágólapon.</p>`);
+    });
+    $("#downloadDbBtn").addEventListener('click', () => {
+      downloadText(`fitnesslady_admin_db_${nowYMD()}.json`, dbPreview.value || "{}");
+    });
+
+    $("#downloadDbBtn").addEventListener('click', ()=>{});
+
+    $("#exportAllBtn").addEventListener('click', ()=>{});
+
+    // import
+    $("#importFile").addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if(!file) return;
+      try{
+        const text = await file.text();
+        const obj = JSON.parse(text);
+        if(!obj?.customers || !Array.isArray(obj.customers)) throw new Error("Invalid format");
+        db = obj;
+        selectedId = null;
+        saveDB();
+        fillEditor(null);
+        openModal("Import kész", `<p>DB betöltve.</p>`);
+      }catch(err){
+        openModal("Hiba", `<p>Import sikertelen: <b>${escapeHtml(err.message || String(err))}</b></p>`);
+      } finally {
+        e.target.value = "";
+      }
+    });
+
+    // reset
+    $("#resetBtn").addEventListener('click', () => {
+      openModal("Reset (demo)", `
+        <p>Biztos törlöd a helyi (localStorage) adatokat?</p>
+        <div class="row" style="margin-top:10px;">
+          <button class="pill primary" id="confirmResetBtn" type="button">Igen, reset</button>
+          <button class="pill" id="cancelResetBtn" type="button">Mégse</button>
+        </div>
+      `);
+      setTimeout(() => {
+        $("#confirmResetBtn")?.addEventListener('click', () => {
+          localStorage.removeItem(STORAGE_KEY);
+          db = { version:1, updatedAt:new Date().toISOString(), customers: [] };
+          selectedId = null;
+          saveDB();
+          fillEditor(null);
+          closeModal();
+        });
+        $("#cancelResetBtn")?.addEventListener('click', closeModal);
+      }, 0);
+    });
+
+    // roadmap/security
+    $("#openRoadmapBtn").addEventListener('click', () => {
+      openModal("Roadmap (B)", `
+        <h3>1) Admin védelem</h3>
+        <p>admin.fitnesslady.ch → HTTP Basic Auth + SSL.</p>
+        <h3>2) Backend (PHP + SQLite)</h3>
+        <p>/api/login, /api/logout, /api/users, /api/user/:email</p>
+        <h3>3) Fizetés (Payrexx)</h3>
+        <p>Webhook → user aktiválás, csomag, lejárat, email.</p>
+        <h3>4) Védett videó</h3>
+        <p>Signed playback token / DRM-szerű “nem megosztható” lejátszás.</p>
+      `);
+    });
+
+    $("#openSecurityBtn").addEventListener('click', () => {
+      openModal("Biztonság", `
+        <p><b>Minimum:</b> admin.fitnesslady.ch mappa jelszavas védelme szerveren (Basic Auth).</p>
+        <p><b>Később:</b> admin login a backendben (session cookie), rate limit, audit log.</p>
+        <p><b>Videók:</b> signed tokens, domain restriction, expiring URLs.</p>
+      `);
+    });
+
+    // mobile nav (simple)
+    const menuBtn = $("#menuBtn");
+    let mobileOpen = false;
+    menuBtn?.addEventListener("click", () => {
+      mobileOpen = !mobileOpen;
+      if(mobileOpen){
+        const nav = document.createElement("div");
+        nav.id = "mobileNav";
+        nav.style.position = "fixed";
+        nav.style.top = "64px";
+        nav.style.left = "14px";
+        nav.style.right = "14px";
+        nav.style.zIndex = "60";
+        nav.style.background = "rgba(20,12,26,.72)";
+        nav.style.border = "1px solid rgba(255,255,255,.10)";
+        nav.style.borderRadius = "18px";
+        nav.style.backdropFilter = "blur(14px)";
+        nav.style.boxShadow = "0 20px 70px rgba(0,0,0,.55)";
+        nav.style.padding = "12px";
+        nav.innerHTML = `
+          <a href="#customers" style="display:block; padding:10px 10px; color:rgba(255,255,255,.86)">Vevők</a>
+          <a href="#editor" style="display:block; padding:10px 10px; color:rgba(255,255,255,.86)">Szerkesztő</a>
+          <a href="#export" style="display:block; padding:10px 10px; color:rgba(255,255,255,.86)">Export/Import</a>
+          <a href="#help" style="display:block; padding:10px 10px; color:rgba(255,255,255,.86)">Segítség</a>
+          <a href="/hu/" target="_blank" rel="noopener" style="display:block; padding:10px 10px; color:rgba(255,255,255,.86)">Főoldal</a>
+          <a href="/hu/app/" target="_blank" rel="noopener" style="display:block; padding:10px 10px; color:rgba(255,255,255,.86)">Vevő oldal</a>
+        `;
+        document.body.appendChild(nav);
+      } else {
+        $("#mobileNav")?.remove();
+      }
+    });
+    document.addEventListener("click", (e) => {
+      const nav = $("#mobileNav");
+      if(!nav) return;
+      if(e.target === menuBtn) return;
+      if(nav.contains(e.target)) {
+        nav.remove();
+        mobileOpen = false;
+      }
+    });
+
+    // tap glow
+    function enableTapGlow(selector=".interactive"){
+      $$(selector).forEach(el=>{
+        el.addEventListener("touchstart", ()=>{
+          el.classList.add("is-active");
+          clearTimeout(el.__t);
+          el.__t = setTimeout(()=>el.classList.remove("is-active"), 650);
+        }, {passive:true});
+      });
+    }
+    enableTapGlow();
+
+    // top nav active underline
+    (() => {
+      const links = Array.from($$('.nav a')).filter(a=>a.getAttribute('href')?.startsWith('#'));
+      const sections = links.map(a=>$(a.getAttribute('href'))).filter(Boolean);
+      if(!sections.length) return;
+      const setActive = (id) => links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === `#${id}`));
+      const io = new IntersectionObserver((entries)=>{
+        const visible = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+        if(visible?.target?.id) setActive(visible.target.id);
+      }, { threshold: [0.2, 0.35, 0.5] });
+      sections.forEach(s=>io.observe(s));
+    })();
+
+    // quick actions
+    $("#backupBtn").addEventListener('click', ()=>{});
+    $("#newCustomerQuickBtn").addEventListener('click', ()=>{});
+
+    // global: backup
+    $("#backupBtn").addEventListener('click', backupExport);
+
+    // reset duplicates safe
+    $("#backupBtn").addEventListener('click', ()=>{});
+
+    // customers: quick create with prompt
+    $("#createCustomerBtn").addEventListener('click', () => {
+      openModal("Új vevő", `
+        <p>Adj meg egy email címet (opcionális). Létrehozzuk a vevőt, majd a szerkesztőben kitöltöd a többit.</p>
+        <div class="label">
+          <span>Email</span>
+          <input class="input" id="newEmailPrompt" placeholder="vevo@email.com">
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <button class="pill primary" id="createNowBtn" type="button">Létrehozás</button>
+          <button class="pill" id="cancelCreateBtn" type="button">Mégse</button>
+        </div>
+      `);
+      setTimeout(() => {
+        $("#cancelCreateBtn")?.addEventListener('click', closeModal);
+        $("#createNowBtn")?.addEventListener('click', () => {
+          const email = sanitizeEmail($("#newEmailPrompt")?.value || "");
+          closeModal();
+          createCustomerFlow(email);
+        });
+        $("#newEmailPrompt")?.focus({preventScroll:true});
+      }, 0);
+    });
+
+    $("#newCustomerQuickBtn").addEventListener('click', () => createCustomerFlow(""));
+
+    // backup button (hero)
+    $("#backupBtn").addEventListener('click', backupExport);
+
+    // export in hero card
+    $("#backupBtn").addEventListener('click', ()=>{});
+
+    // db preview sync
+    function renderDBPreview(){
+      dbPreview.value = JSON.stringify(db, null, 2);
+    }
+
+    // export all button also updates preview
+    $("#exportAllBtn").addEventListener('click', ()=>{});
+
+    // hook other buttons to backup
+    $("#backupBtn").addEventListener('click', backupExport);
+
+    // "backup export" shortcut
+    $("#backupBtn").addEventListener('click', ()=>{});
+
+    // universal: export all (already) - keep preview fresh
+    $("#exportAllBtn").addEventListener('click', () => {
+      renderDBPreview();
+      backupExport();
+    });
+
+    // also allow table export from row
+    // already
+
+    // "Backup export" near top
+    $("#backupBtn").addEventListener('click', ()=>{});
+
+    // "Backup export" in header card
+    $("#backupBtn").addEventListener('click', ()=>{});
+
+    // quick backup from "Backup export" button
+    $("#backupBtn").addEventListener('click', ()=>{});
+
+    // backup from "backupBtn" already
+
+    // custom: backup + show modal
+    $("#backupBtn").addEventListener('click', () => {
+      renderDBPreview();
+      openModal("Backup export", `<p>Letöltés indul: <b class="mono">fitnesslady_admin_db_backup_${nowYMD()}.json</b></p>`);
+      backupExport();
+    });
+
+    // Also "exportAllBtn" show modal
+    $("#exportAllBtn").addEventListener('click', () => {
+      renderDBPreview();
+      openModal("Teljes export", `<p>Letöltés indul: <b class="mono">fitnesslady_admin_db_backup_${nowYMD()}.json</b></p>`);
+      backupExport();
+    });
+
+    // db preview load
+    renderDBPreview();
+    renderCustomersTable();
+    updateSysTag();
+    fillEditor(null);
+
+    // If empty db, create a demo customer for easier testing
+    if(db.customers.length === 0){
+      const demo = makeCustomer("demo@fitnesslady.ch");
+      demo.name = "Demo Vevő";
+      demo.password = randomPassword(10);
+      demo.adminNote = "Demo vevő — teszteld a szerkesztőt és a user.json exportot.";
+      db.customers.push(demo);
+      saveDB();
+      fillEditor(demo);
+    }
+
+    // Export user from table works; also allow quick export after save
+    $("#backupBtn").addEventListener('click', ()=>{});
+
+  </script>
+</body>
+</html>
